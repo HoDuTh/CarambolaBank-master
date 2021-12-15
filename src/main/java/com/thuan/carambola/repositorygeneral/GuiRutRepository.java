@@ -26,7 +26,7 @@ public interface GuiRutRepository extends JpaRepository<GDGoiRut, String> {
      * @param maNV (String) mã nhân viên thực hiện giao dịch
      **/
     @Transactional
-    @Procedure("SP_ChuyenTien") // Chưa check
+    @Procedure("SP_GD_GUIRUT")
     Map<String, String> send(@Param("SOTK") String soTK,
                              @Param("SOTIEN") BigInteger soTien,
                              @Param("NGAYGD") Instant ngayGD,

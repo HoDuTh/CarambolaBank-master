@@ -21,8 +21,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -59,7 +62,7 @@ public class KhachHangController  extends BaseController implements Initializabl
 
     KhachHangRepository khachHangRepository;
     ObservableList<KhachHang> obList;
-
+    Logger log = LoggerFactory.getLogger(KhachHangController.class);
     @Autowired
     public KhachHangController (KhachHangRepository khachHangRepository,
                                 PhanManhRepository phanManhRepository)
@@ -69,7 +72,10 @@ public class KhachHangController  extends BaseController implements Initializabl
         this.phanManhRepository = phanManhRepository;
         stack = new Stack<Handle<KhachHang>>();
     }
-
+//    @Scheduled(fixedRate = 2000)
+//    public void scheduleTaskWithFixedRate() {
+//        log.info("Send email to producers to inform quantity sold items");
+//    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTimePicker();

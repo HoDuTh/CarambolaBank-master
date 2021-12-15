@@ -88,7 +88,7 @@
                               </ComboBox>
                            </children>
                         </FlowPane>
-                        <FlowPane fx:id="pnInput">
+                        <FlowPane fx:id="pnInput" disable="true">
                            <children>
                               <ToolBar prefHeight="40.0" prefWidth="426.0">
                                  <items>
@@ -209,71 +209,71 @@
                                           <Insets top="20.0" />
                                        </padding>
                                     </FlowPane>
-                                 </children>
-                              </FlowPane>
-                           </children>
-                        </FlowPane>
-                        <FlowPane>
-                           <children>
-                              <FlowPane prefHeight="41.0" prefWidth="418.0">
-                                 <children>
-                                    <Label prefHeight="38.0" prefWidth="124.0" text="Ngày cấp">
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </Label>
-                                    <DatePicker fx:id="dpNgay" prefHeight="38.0" prefWidth="165.0">
-                                       <FlowPane.margin>
-                                          <Insets top="10.0" />
-                                       </FlowPane.margin>
-                                    </DatePicker>
-                                    <TextField fx:id="tfHour" prefHeight="30.0" prefWidth="30.0">
-                                       <FlowPane.margin>
-                                          <Insets left="10.0" right="10.0" top="10.0" />
-                                       </FlowPane.margin>
-                                    </TextField>
-                                    <Label prefHeight="38.0" prefWidth="0.0" text=":" />
-                                    <TextField fx:id="tfMinute" prefHeight="30.0" prefWidth="30.0">
-                                       <FlowPane.margin>
-                                          <Insets left="10.0" right="10.0" top="10.0" />
-                                       </FlowPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <padding>
-                                    <Insets top="20.0" />
-                                 </padding>
-                              </FlowPane>
-                              <FlowPane prefHeight="65.0" prefWidth="418.0">
-                                 <children>
-                                    <FlowPane prefHeight="86.0" prefWidth="418.0">
-                                       <FlowPane.margin>
-                                          <Insets />
-                                       </FlowPane.margin>
+                                    <FlowPane>
                                        <children>
-                                          <FlowPane prefHeight="38.0" prefWidth="419.0">
-                                             <FlowPane.margin>
-                                                <Insets top="5.0" />
-                                             </FlowPane.margin>
+                                          <FlowPane prefHeight="41.0" prefWidth="418.0">
                                              <children>
-                                                <Label prefHeight="38.0" prefWidth="48.0" text="Giờ">
+                                                <Label prefHeight="38.0" prefWidth="124.0" text="Ngày cấp">
                                                    <padding>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                 </Label>
-                                                <Slider fx:id="sliderHour" blockIncrement="1.0" majorTickUnit="2.0" max="24.0" minorTickCount="1" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                <DatePicker fx:id="dpNgay" prefHeight="38.0" prefWidth="165.0">
+                                                   <FlowPane.margin>
+                                                      <Insets top="10.0" />
+                                                   </FlowPane.margin>
+                                                </DatePicker>
+                                                <TextField fx:id="tfHour" prefHeight="30.0" prefWidth="30.0">
+                                                   <FlowPane.margin>
+                                                      <Insets left="10.0" right="10.0" top="10.0" />
+                                                   </FlowPane.margin>
+                                                </TextField>
+                                                <Label prefHeight="38.0" prefWidth="0.0" text=":" />
+                                                <TextField fx:id="tfMinute" prefHeight="30.0" prefWidth="30.0">
+                                                   <FlowPane.margin>
+                                                      <Insets left="10.0" right="10.0" top="10.0" />
+                                                   </FlowPane.margin>
+                                                </TextField>
                                              </children>
+                                             <padding>
+                                                <Insets top="20.0" />
+                                             </padding>
                                           </FlowPane>
-                                          <FlowPane prefHeight="38.0" prefWidth="420.0">
-                                             <FlowPane.margin>
-                                                <Insets top="5.0" />
-                                             </FlowPane.margin>
+                                          <FlowPane prefHeight="65.0" prefWidth="418.0">
                                              <children>
-                                                <Label prefHeight="38.0" prefWidth="48.0" text="Phút">
-                                                   <padding>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Slider fx:id="sliderMinute" blockIncrement="1.0" majorTickUnit="5.0" max="60.0" minorTickCount="5" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                <FlowPane prefHeight="86.0" prefWidth="418.0">
+                                                   <FlowPane.margin>
+                                                      <Insets />
+                                                   </FlowPane.margin>
+                                                   <children>
+                                                      <FlowPane prefHeight="38.0" prefWidth="419.0">
+                                                         <FlowPane.margin>
+                                                            <Insets top="5.0" />
+                                                         </FlowPane.margin>
+                                                         <children>
+                                                            <Label prefHeight="38.0" prefWidth="48.0" text="Giờ">
+                                                               <padding>
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                            <Slider fx:id="sliderHour" blockIncrement="1.0" majorTickUnit="2.0" max="24.0" minorTickCount="1" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                         </children>
+                                                      </FlowPane>
+                                                      <FlowPane prefHeight="38.0" prefWidth="420.0">
+                                                         <FlowPane.margin>
+                                                            <Insets top="5.0" />
+                                                         </FlowPane.margin>
+                                                         <children>
+                                                            <Label prefHeight="38.0" prefWidth="48.0" text="Phút">
+                                                               <padding>
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                            <Slider fx:id="sliderMinute" blockIncrement="1.0" majorTickUnit="5.0" max="60.0" minorTickCount="5" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                         </children>
+                                                      </FlowPane>
+                                                   </children>
+                                                </FlowPane>
                                              </children>
                                           </FlowPane>
                                        </children>

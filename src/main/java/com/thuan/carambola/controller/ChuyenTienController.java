@@ -25,6 +25,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -68,7 +70,6 @@ public class ChuyenTienController extends BaseController implements Initializabl
     @FXML private TextField tfSoTien;
     @FXML private TextField tfSoTKNhan;
     @FXML private TextField tfSearch;
-
     TaiKhoanRepository taiKhoanRepository;
     ChuyenTienRepository chuyenTienRepository;
     PhanManhRepository phanManhRepository;
@@ -76,6 +77,7 @@ public class ChuyenTienController extends BaseController implements Initializabl
     ObservableList<TaiKhoan> obListTK;
     ObservableList<GDChuyenTien> obListGD;
 
+    Logger log = LoggerFactory.getLogger(ChuyenTienController.class);
     @Autowired
     public ChuyenTienController (ChuyenTienRepository chuyenTienRepository,
                                  PhanManhRepository phanManhRepository,
@@ -140,25 +142,23 @@ public class ChuyenTienController extends BaseController implements Initializabl
         initTimePicker();
         super.initialize(location, resources);
     }
-    @Scheduled(fixedRate = 2000)
-    public void scheduleTaskWithFixedRate() {
-        log.info("Send email to producers to inform quantity sold items");
-    }
+//    @Scheduled(fixedRate = 2000)
+//    public void scheduleTaskWithFixedRate() {
+//        log.info("Send email to producers to inform quantity sold items");
+//    }
     @Override
     void btnThem(ActionEvent actionEvent) {
         tfSoTKChuyen.setText("");
         tfSoTien.setText("");
         tfSoTKNhan.setText("");
-
         clearDateTime();
     }
-    @Override
+    @Override //Không làm gì hết
     void btnXoa(ActionEvent actionEvent) {
 
     }
-    @Override
+    @Override //Không làm gì hết
     void btnSua(ActionEvent actionEvent) {
-        tfSoTKChuyen.setText(getDateTime().toString());
     }
     @Override
     void btnGhi(ActionEvent actionEvent) {

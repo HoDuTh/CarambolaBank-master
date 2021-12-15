@@ -20,6 +20,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,10 +30,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Stack;
+import java.util.*;
 
 @Component
 public abstract class BaseController implements Initializable {
@@ -66,7 +64,6 @@ public abstract class BaseController implements Initializable {
     @FXML Button btnThem;
     @FXML Button btnUpdate;
     @FXML Button btnXoa;
-
     //------------------Button------------------
 
     //---------------LabelNhanVien--------------
@@ -86,7 +83,7 @@ public abstract class BaseController implements Initializable {
     @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
     Stack stack;
     PhanManhRepository phanManhRepository;
-    Logger log = LoggerFactory.getLogger(BaseController.class);
+
 
     abstract void updateData();
     abstract void filtered();
@@ -108,13 +105,16 @@ public abstract class BaseController implements Initializable {
         initCBChiNhanhEvent();
         initPermission();
         initTableView();
-        intitButton();
-        intitPanel();
-        initMenu();
-        initNV();
-        initTableEvent();
+        intitButton(); // Cài chức năng của các button
+        intitPanel(); // Cài các chức năng của panel vd panelSS để clear table selection
+        initMenu(); // Cài đặt điều hướng menu
+        initNV(); // Cài đặt thông tin nhân viên đang sử dụng chương trình
+        if(Objects.equals(JavaFXApplication.nhom, "ChiNhanh")) {
+            initTableEvent();
+        } // Chỉ có quyền chi nhánh mới khởi tạo các event table
         initValidation();
     }
+
     String formatCurrency(BigInteger soTien)
     {
         Locale localeVN = new Locale("vi", "VN");

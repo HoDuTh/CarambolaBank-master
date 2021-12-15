@@ -85,7 +85,7 @@
                               </ComboBox>
                            </children>
                         </FlowPane>
-                        <FlowPane fx:id="pnInput">
+                        <FlowPane fx:id="pnInput" disable="true">
                            <children>
                               <ToolBar prefHeight="40.0" prefWidth="426.0">
                                  <items>

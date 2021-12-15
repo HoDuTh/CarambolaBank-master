@@ -20,7 +20,7 @@ import java.util.UUID;
 })
 @Entity
 @NamedStoredProcedureQueries({
-        @NamedStoredProcedureQuery(name = "GDGoiRut.edit", procedureName = "SP_GUIRUT", parameters = {
+        @NamedStoredProcedureQuery(name = "GDGoiRut.send", procedureName = "SP_GD_GUIRUT", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTIEN", type = BigInteger.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYGD", type = Instant.class),

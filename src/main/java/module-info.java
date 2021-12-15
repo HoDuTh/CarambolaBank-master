@@ -27,7 +27,7 @@ module com.thuan.carambola {
 
     exports com.thuan.carambola;
     opens com.thuan.carambola to spring.core;
-    exports com.thuan.carambola.controller to spring.beans;
+    exports com.thuan.carambola.controller to spring.beans, spring.context;
     opens com.thuan.carambola.controller to javafx.fxml, spring.core;
     opens com.thuan.carambola.config to spring.core;
     exports com.thuan.carambola.repositoryprimary to javafx.fxml, spring.beans, spring.context;

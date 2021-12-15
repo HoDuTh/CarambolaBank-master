@@ -26,15 +26,17 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Stack;
+import java.time.Instant;
+import java.util.*;
 
 @Component
 public class GuiRutController extends BaseController implements Initializable {
@@ -75,6 +77,7 @@ public class GuiRutController extends BaseController implements Initializable {
     ObservableList<TaiKhoan> obListTK;
     ObservableList<GDGoiRut> obListGD;
 
+    Logger log = LoggerFactory.getLogger(GuiRutController.class);
     @Autowired
     public GuiRutController( TaiKhoanRepository taiKhoanRepository,
                              GuiRutRepository guiRutRepository,
@@ -90,8 +93,12 @@ public class GuiRutController extends BaseController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTimePicker();
         super.initialize(location, resources);
-    }
 
+    }
+//    @Scheduled(fixedRate = 2000)
+//    public void scheduleTaskWithFixedRate() {
+//        log.info("Send email to producers to inform quantity sold items");
+//    }
     @Override
     void updateData()
     {
@@ -133,7 +140,45 @@ public class GuiRutController extends BaseController implements Initializable {
     }
     @Override
     void btnGhi(ActionEvent actionEvent) {
+        String soTK = tfSoTK.getText().replaceAll(" ", "").trim();
+        BigInteger soTien = new BigInteger("0");
+        if(soTK.isBlank()){
+            FXAlerts.warning("Chưa chọn số tài khoản");
+            return;
+        }
+        if(tfSoTien.getText().isBlank()) {
+            FXAlerts.warning("Chưa nhập số tiền cần chuyển");
+            return;
+        }
+        else {
+            soTien = new BigInteger(tfSoTien.getText());
+        }
+        String maNV = JavaFXApplication.maNV;
+        if(maNV.isBlank()) {
+            FXAlerts.warning("Thiếu nhân viên thực hiện công việc");
+            return;
+        }
+        Instant ngayGD = getDateTime();
+        RadioButton selectedRadioButton = (RadioButton) tgLoaiGD.getSelectedToggle();
+        if(selectedRadioButton == null)
+        {
+            FXAlerts.warning("Chưa chọn loại giao dịch");
+            return;
+        }
+        String loaiGD = selectedRadioButton.getText();
 
+        if(loaiGD.equals("Gửi tiền"))
+            loaiGD = "GT";
+        else loaiGD = "RT";
+        System.out.println(soTK);
+        System.out.println(soTien);
+        System.out.println(ngayGD);
+        System.out.println(loaiGD);
+        System.out.println(maNV);
+        Map<String, String> result = guiRutRepository.send(soTK, soTien, ngayGD, loaiGD, maNV );
+        String msg = result.get("MSG");
+        String isSuccess = result.get("ISSUCCESS");
+        FXAlerts.info(msg);
     }
     @Override
     void initValidation()

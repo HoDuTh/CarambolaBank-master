@@ -22,7 +22,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -59,6 +62,7 @@ public class NhanVienController extends BaseController implements Initializable 
     PhanManhRepository phanManhRepository;
 
     ObservableList<NhanVien> obList;
+    Logger log = LoggerFactory.getLogger(NhanVienController.class);
     @Autowired
     public NhanVienController (NhanVienRepository nhanVienRepository,
                                PhanManhRepository phanManhRepository)
@@ -68,10 +72,14 @@ public class NhanVienController extends BaseController implements Initializable 
         this.phanManhRepository = phanManhRepository;
         stack = new Stack<Handle<NhanVien>>();
     }
-
+//    @Scheduled(fixedRate = 2000)
+//    public void scheduleTaskWithFixedRate() {
+//        log.info("Send email to producers to inform quantity sold items");
+//    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+
     }
     @Override
     void initTableEvent()

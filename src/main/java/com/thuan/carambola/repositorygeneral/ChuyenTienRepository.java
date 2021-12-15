@@ -26,7 +26,7 @@ public interface ChuyenTienRepository extends JpaRepository<GDChuyenTien, String
      * @param maNV (String) mã nhân viên thực hiện giao dịch
      **/
     @Transactional
-    @Procedure("SP_ChuyenTien") // Chưa check
+    @Procedure("SP_ChuyenTien")
     Map<String, String> send(@Param("SOTK_CHUYEN") String soTKChuyenTien,
                              @Param("SOTK_NHAN") String soTKNhanTien,
                              @Param("SOTIEN") BigInteger soTien,

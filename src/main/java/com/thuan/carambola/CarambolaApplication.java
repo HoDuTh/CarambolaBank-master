@@ -5,10 +5,12 @@ import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Slf4j
 @EntityScan
 @SpringBootApplication
+@EnableScheduling
 public class CarambolaApplication {
     public static MultiTenantManager tenantManager;
 

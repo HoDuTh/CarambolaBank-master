@@ -24,7 +24,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -64,7 +67,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
 
     ObservableList<TaiKhoan> obListTK;
     ObservableList<KhachHang> obListKH;
-
+    Logger log = LoggerFactory.getLogger(TaiKhoanController.class);
     @Autowired
     public TaiKhoanController( TaiKhoanRepository taiKhoanRepository,
                                KhachHangRepository khachHangRepository,
@@ -80,7 +83,10 @@ public class TaiKhoanController extends BaseController implements Initializable 
         initTimePicker();
         super.initialize(location, resources);
     }
-
+//    @Scheduled(fixedRate = 2000)
+//    public void scheduleTaskWithFixedRate() {
+//        log.info("Send email to producers to inform quantity sold items");
+//    }
     @Override
     void initTableView() {
         list2TableTK(tc2SoTK, tc2CMNDTK, tc2SoDuTK, tc2ChiNhanhTK, tc2NgayMoTK);
