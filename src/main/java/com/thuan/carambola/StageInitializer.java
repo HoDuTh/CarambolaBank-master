@@ -27,7 +27,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     private static int startHeight;
     private static int startWidth;
     private static Stage primaryStage;
-    private static Resource currentResource;
+    public static Resource currentResource;
 
     public static Resource chuyenTien;
     public static Resource login;

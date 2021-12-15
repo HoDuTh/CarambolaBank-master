@@ -8,6 +8,8 @@ public class DateTimeService {
     }
 
     public static boolean isAfterTime(String sHour, String sMinute){
+        if(sHour.isBlank() || sMinute.isBlank())
+            return false;
         int hour = Integer.parseInt(sHour);
         int minute = Integer.parseInt(sMinute);
         return isAfterTime(hour, minute);

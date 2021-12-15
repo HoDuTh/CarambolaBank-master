@@ -26,7 +26,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
                @Param("TEN") String ten,
                @Param("DIACHI") String diaChi,
                @Param("PHAI") String phai,
-               @Param("NGAYCAP") String ngayCap,
+               @Param("NGAYCAP") Instant ngayCap,
                @Param("SODT") String soDT);
 
     @Transactional
@@ -36,7 +36,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
                              @Param("TEN") String ten,
                              @Param("DIACHI") String diaChi,
                              @Param("PHAI") String phai,
-                             @Param("NGAYCAP") String ngayCap,
+                             @Param("NGAYCAP") Instant ngayCap,
                              @Param("SODT") String soDT);
 
     @Transactional

@@ -11,6 +11,7 @@ import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.KhachHangRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -32,6 +33,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -60,6 +63,7 @@ public class KhachHangController  extends BaseController implements Initializabl
     @FXML private TableColumn<KhachHang, String> tc1Ten;
     @FXML private TableColumn<KhachHang, String> tc1CMND;
 
+    @FXML DatePicker dpNgay;
     KhachHangRepository khachHangRepository;
     ObservableList<KhachHang> obList;
     Logger log = LoggerFactory.getLogger(KhachHangController.class);
@@ -72,14 +76,19 @@ public class KhachHangController  extends BaseController implements Initializabl
         this.phanManhRepository = phanManhRepository;
         stack = new Stack<Handle<KhachHang>>();
     }
-//    @Scheduled(fixedRate = 2000)
-//    public void scheduleTaskWithFixedRate() {
-//        log.info("Send email to producers to inform quantity sold items");
-//    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTimePicker();
+//        initTimePicker();
         super.initialize(location, resources);
+    }
+    @Scheduled(fixedRate = reloadTimer)
+    public void scheduleTaskWithFixedRate() {
+        Platform.runLater(() -> {
+            if(StageInitializer.currentResource == StageInitializer.khachHang) {
+                updateData();
+            }
+        });
     }
     @Override
     void initTableEvent()
@@ -88,7 +97,7 @@ public class KhachHangController  extends BaseController implements Initializabl
     }
     private void initTableDoubleCLickOnRow()
     {
-        tbKhachHang.setRowFactory(tv -> {
+            tbKhachHang.setRowFactory(tv -> {
             TableRow<KhachHang> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
@@ -103,7 +112,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                 }
             });
             return row ;
-        });
+            });
     }
     private void insertDataToInputBox(KhachHang khachHang)
     {
@@ -158,14 +167,46 @@ public class KhachHangController  extends BaseController implements Initializabl
 
     @Override
     void btnSua(ActionEvent actionEvent) {
-        Map<String, String> s = khachHangRepository.add("322243", "Hoàng", "Đức Thuận", "2324", "Nam", "13/12/2020", "2344324");
-        updateData();
-        FXAlerts.info(s.get("MSG"));
+
     }
 
     @Override
     void btnGhi(ActionEvent actionEvent) {
+        String cmnd = tfCMND.getText();
+        String ho = tfHo.getText();
+        String ten = tfTen.getText();
+        String diaChi = tfDiaChi.getText();
+        String soDT = tfSoDienThoai.getText();
+        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
+        if(selectedRadioButton == null)
+        {
+            FXAlerts.warning("Chưa chọn giới tính");
+            return;
+        }
+        String phai = selectedRadioButton.getText();
+        Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
 
+        String isSuccess = result.get("ISSUCCESS");
+        String msg = result.get("MSG");
+        if(isSuccess.equals("1")) {
+            KhachHang kh = new KhachHang();
+            kh.setId(cmnd);
+            kh.setHo(ho);
+            kh.setTen(ten);
+            kh.setDiaChi(diaChi);
+            kh.setPhai(phai);
+            kh.setNgayCap(ngay);
+            kh.setSoDT(soDT);
+            Handle<KhachHang> handle = new Handle<>();
+            handle.setEntity(kh);
+            handle.setAction("ghi");
+            FXAlerts.info(msg);
+        }
+        else {
+            FXAlerts.error(msg);
+        }
+        updateData();
     }
 
     @Override
@@ -184,7 +225,11 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void initValidation()
     {
-
+        valideCMND(tfCMND);
+        valideHo(tfHo);
+        valideTen(tfTen);
+        valideDiaChi(tfDiaChi);
+        valideSoDT(tfSoDienThoai);
     }
     @Override
     void initTableView()

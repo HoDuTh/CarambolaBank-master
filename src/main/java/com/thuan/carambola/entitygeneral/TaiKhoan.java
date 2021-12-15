@@ -23,14 +23,14 @@ import java.util.UUID;
     @NamedStoredProcedureQuery(name = "TaiKhoan.add", procedureName = "SP_TAO_TAIKHOAN", parameters = {
             @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
             @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
             @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
             @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
     }),
     @NamedStoredProcedureQuery(name = "TaiKhoan.edit", procedureName = "SP_CAPNHAT_THONGTIN_TAIKHOAN", parameters = {
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = String.class),
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
         @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
         @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
     }),

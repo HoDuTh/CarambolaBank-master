@@ -13,6 +13,7 @@ import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.KhachHangRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -83,10 +85,14 @@ public class TaiKhoanController extends BaseController implements Initializable 
         initTimePicker();
         super.initialize(location, resources);
     }
-//    @Scheduled(fixedRate = 2000)
-//    public void scheduleTaskWithFixedRate() {
-//        log.info("Send email to producers to inform quantity sold items");
-//    }
+    @Scheduled(fixedRate = reloadTimer)
+    public void scheduleTaskWithFixedRate() {
+        Platform.runLater(() -> {
+            if(StageInitializer.currentResource == StageInitializer.taiKhoan) {
+                updateData();
+            }
+        });
+    }
     @Override
     void initTableView() {
         list2TableTK(tc2SoTK, tc2CMNDTK, tc2SoDuTK, tc2ChiNhanhTK, tc2NgayMoTK);
@@ -116,9 +122,9 @@ public class TaiKhoanController extends BaseController implements Initializable 
 
     @Override
     void btnXoa(ActionEvent actionEvent) {
-//       TaiKhoan taiKhoan = tbTaiKhoan.getSelectionModel().getSelectedItem();
-        Map<String, String> result = taiKhoanRepository.delete("0324234243");
-        FXAlerts.info(result.get("MSG") + result.get("ISERROR"));
+        TaiKhoan taiKhoan = tbTaiKhoan.getSelectionModel().getSelectedItem();
+        Map<String, String> result = taiKhoanRepository.delete(taiKhoan.getId());
+        FXAlerts.info(result.get("MSG"));
     }
 
     @Override
@@ -128,19 +134,35 @@ public class TaiKhoanController extends BaseController implements Initializable 
 
     @Override
     void btnGhi(ActionEvent actionEvent) {
-        addTK();
+        String cmnd = tfCMDN.getText();
+        String soTK = tfSoTK.getText();
+        Instant ngay = getDateTime();
+
+        Map<String, String> result = taiKhoanRepository.add(cmnd, soTK, ngay);
+
+        String isSuccess = result.get("ISSUCCESS");
+        String msg = result.get("MSG");
+        if(isSuccess.equals("1")) {
+            TaiKhoan tk = new TaiKhoan();
+            tk.setId(soTK);
+            tk.setCmnd(cmnd);
+            tk.setNgayMoTK(ngay);
+            Handle<TaiKhoan> handle = new Handle<>();
+            handle.setEntity(tk);
+            handle.setAction("ghi");
+            FXAlerts.info(msg);
+        }
+        else {
+            FXAlerts.error(msg);
+        }
+        updateData();
     }
 
     @Override
     void btnHoanTac(ActionEvent actionEvent) {
 
     }
-    void addTK()
-    {
-        Map<String, String> s = taiKhoanRepository.add("32243", "", "9/19/2021");
-        updateData();
-        FXAlerts.info(s.get("MSG"));
-    }
+
     @Override
     public void filtered() //sử dụng filer để tìm kiếm
     {
@@ -151,7 +173,8 @@ public class TaiKhoanController extends BaseController implements Initializable 
     @Override
     void initValidation()
     {
-
+        valideSoTK(tfSoTK);
+        valideCMND(tfCMDN);
     }
     @Override
     void initTableEvent()
@@ -160,6 +183,27 @@ public class TaiKhoanController extends BaseController implements Initializable 
     }
     private void initTableDoubleCLickOnRow()
     {
+        tbKhachHang.setRowFactory(tv -> {
+            TableRow<KhachHang> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    KhachHang khachHang = row.getItem();
+                    boolean check;
+                    String newCMND = khachHang.getId();
+                    String tfCMNDValue = tfCMDN.getText();
+                    if(khachHang.getId().equals(tfCMDN.getText())) return;
+                    if(!tfCMNDValue.isBlank()){
+                        if(!Objects.equals(newCMND, tfCMNDValue))
+                        {
+                            check = FXAlerts.confirm(String.format("Thay đổi số cmnd thành %s", newCMND));
+                            if(!check) return;
+                        }
+                    }
+                    tfCMDN.setText(newCMND);
+                }
+            });
+            return row ;
+        });
         tbTaiKhoan.setRowFactory(tv -> {
             TableRow<TaiKhoan> row = new TableRow<>();
             row.setOnMouseClicked(event -> {

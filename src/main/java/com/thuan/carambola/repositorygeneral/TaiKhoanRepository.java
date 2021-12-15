@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -23,13 +24,13 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
     @Procedure("SP_TAO_TAIKHOAN")
     Map<String, String> add(@Param("CMND") String cmnd,
                @Param("SOTK") String soTK,
-               @Param("NGAYMOTK") String ngayMoTK);
+               @Param("NGAYMOTK") Instant ngayMoTK);
 
     @Transactional
     @Procedure("SP_CAPNHAT_THONGTIN_TAIKHOAN") // chưa check
     Map<String, String> edit(@Param("CMND") String cmnd,
                @Param("SOTK") String soTK,
-               @Param("NGAYMOTK") String ngayMoTK);
+               @Param("NGAYMOTK") Instant ngayMoTK);
 
     @Transactional
     @Procedure("SP_XOA_TAIKHOAN") // chưa check

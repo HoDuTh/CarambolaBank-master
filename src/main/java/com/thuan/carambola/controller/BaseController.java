@@ -20,6 +20,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -84,6 +86,7 @@ public abstract class BaseController implements Initializable {
     Stack stack;
     PhanManhRepository phanManhRepository;
 
+    final long reloadTimer = 300000;
 
     abstract void updateData();
     abstract void filtered();
@@ -97,6 +100,7 @@ public abstract class BaseController implements Initializable {
     abstract void unFiltered();
     abstract void initTableEvent();
     abstract void initValidation();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initPhanManh(phanManhRepository, cbChiNhanh);
@@ -160,36 +164,8 @@ public abstract class BaseController implements Initializable {
     void initTimePicker(){
         sliderHour.setMax(23);
         sliderMinute.setMax(59);
-
-        LocalDateTime ldt = LocalDateTime.now();
-        tfHour.setText(String.valueOf(ldt.getHour()));
-        tfMinute.setText(String.valueOf(ldt.getMinute()));
-
         dpNgay.setValue(LocalDate.now());
 
-        dpNgay.valueProperty().addListener((ov, oldValue, newValue) -> {
-            if(newValue.isAfter(LocalDate.now()))
-            {
-                FXAlerts.warning("Lựa chọn ngày không phù hợp. " +
-                        "Mặc định là ngày giờ hiện tại");
-                dpNgay.setValue(LocalDate.now());
-                tfHour.setText(String.valueOf(LocalTime.now().getHour()));
-                tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
-            }});
-        tfHour.textProperty().bindBidirectional(sliderHour.valueProperty(), new StringConverter<Number>()
-        {
-            @Override
-            public String toString(Number t)
-            {
-                return String.valueOf(t.intValue());
-            }
-            @Override
-            public Number fromString(String string)
-            {
-                return Integer.parseInt(string);
-            }
-
-        });
         tfHour.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -197,8 +173,13 @@ public abstract class BaseController implements Initializable {
                 if (!newValue.matches("\\d*")) {
                     tfHour.setText(newValue.replaceAll("[^\\d]", ""));
                 }
+                else if(newValue.isBlank())
+                {
+                    tfHour.setText(String.valueOf(LocalTime.now().getHour()));
+                    tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
+                }
                 else if(Integer.parseInt(newValue) > 23)
-                    tfHour.setText("23");
+                    tfHour.setText("0");
                 else if(dpNgay.getValue().isEqual(LocalDate.now())
                         && DateTimeService.isAfterTime(tfHour.getText(), tfMinute.getText()))
                 {
@@ -215,13 +196,26 @@ public abstract class BaseController implements Initializable {
                     tfMinute.setText(newValue.replaceAll("[^\\d]", ""));
                 }
                 else if(Integer.parseInt(newValue) > 59)
-                    tfMinute.setText("59");
+                    tfMinute.setText("0");
                 else if(dpNgay.getValue().isEqual(LocalDate.now())
                         && DateTimeService.isAfterTime(tfHour.getText(), tfMinute.getText()))
                 {
                     tfHour.setText(String.valueOf(LocalTime.now().getHour()));
                     tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
                 }
+            }
+        });
+        tfHour.textProperty().bindBidirectional(sliderHour.valueProperty(), new StringConverter<Number>()
+        {
+            @Override
+            public String toString(Number t)
+            {
+                return String.valueOf(t.intValue());
+            }
+            @Override
+            public Number fromString(String string)
+            {
+                return Integer.parseInt(string);
             }
         });
         tfMinute.textProperty().bindBidirectional(sliderMinute.valueProperty(), new StringConverter<Number>()
@@ -236,21 +230,79 @@ public abstract class BaseController implements Initializable {
             {
                 return Integer.parseInt(string);
             }
+        });
+        sliderHour.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(dpNgay.getValue().isEqual(LocalDate.now())
+                        && newValue.intValue() > LocalTime.now().getHour())
+                {
+                    tfHour.setText(String.valueOf(LocalTime.now().getHour()));
+                }
+            }
+        });
+        sliderMinute.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(dpNgay.getValue().isEqual(LocalDate.now())
+                        && Integer.parseInt(tfHour.getText()) >= LocalTime.now().getHour()
+                        && newValue.intValue() > LocalTime.now().getMinute())
+                {
+                    tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
+                }
+            }
+        });
+        sliderHour.setValue(LocalTime.now().getHour());
+        sliderMinute.setValue(LocalTime.now().getMinute());
 
+        dpNgay.valueProperty().addListener((ov, oldValue, newValue) -> {
+            if(newValue.isAfter(LocalDate.now()))
+            {
+                FXAlerts.warning("Lựa chọn ngày không phù hợp. " +
+                        "Mặc định là ngày giờ hiện tại");
+                dpNgay.setValue(LocalDate.now());
+                sliderHour.setValue(LocalTime.now().getHour());
+                sliderMinute.setValue(LocalTime.now().getMinute());
+            }
+            else if(dpNgay.getValue().isEqual(LocalDate.now())
+                    && DateTimeService.isAfterTime(tfHour.getText(), tfMinute.getText()))
+            {
+                tfHour.setText(String.valueOf(LocalTime.now().getHour()));
+                tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
+            }
         });
     }
 
     void valideSoTK(TextField soTK){
-        soTK.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    soTK.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
+        valideNumberField(soTK);
         valideTextFieldLength(soTK, 9);
+    }
+    void valideCMND(TextField soTK){
+        valideNumberField(soTK);
+        valideTextFieldLength(soTK, 10);
+    }
+    void valideHo(TextField ho){
+        valideNameField(ho);
+        valideTextFieldLength(ho, 50);
+    }
+    void valideTen(TextField ten){
+        valideNameField(ten);
+        valideTextFieldLength(ten, 10);
+    }
+    void valideDiaChi(TextField diaChi){
+        valideTextFieldLength(diaChi, 100);
+    }
+    void valideSoDT(TextField soDT){
+        valideNumberField(soDT);
+        valideTextFieldLength(soDT, 15);
+    }
+    void valideNameField(TextField textField)
+    {
+//        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!newValue.matches("\\sa-zA-Z*")) {
+//                textField.setText(newValue.replaceAll("[^\\sa-zA-Z]", ""));
+//            }
+//        });
     }
     void valideMaNV(TextField soTK){
         valideTextFieldLength(soTK, 10);

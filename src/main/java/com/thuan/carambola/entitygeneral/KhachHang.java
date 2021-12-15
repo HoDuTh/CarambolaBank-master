@@ -27,7 +27,7 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYCAP", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYCAP", type = Instant.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
@@ -38,7 +38,7 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYCAP", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYCAP", type = Instant.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)

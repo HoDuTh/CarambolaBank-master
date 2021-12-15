@@ -11,6 +11,7 @@ import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.NhanVienRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -72,10 +73,14 @@ public class NhanVienController extends BaseController implements Initializable 
         this.phanManhRepository = phanManhRepository;
         stack = new Stack<Handle<NhanVien>>();
     }
-//    @Scheduled(fixedRate = 2000)
-//    public void scheduleTaskWithFixedRate() {
-//        log.info("Send email to producers to inform quantity sold items");
-//    }
+    @Scheduled(fixedRate = reloadTimer)
+    public void scheduleTaskWithFixedRate() {
+        Platform.runLater(() -> {
+            if(StageInitializer.currentResource == StageInitializer.nhanVien) {
+                updateData();
+            }
+        });
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);

@@ -14,6 +14,7 @@ import com.thuan.carambola.repositorygeneral.GuiRutRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
 import com.thuan.carambola.setting.ValidationValue;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -95,10 +96,14 @@ public class GuiRutController extends BaseController implements Initializable {
         super.initialize(location, resources);
 
     }
-//    @Scheduled(fixedRate = 2000)
-//    public void scheduleTaskWithFixedRate() {
-//        log.info("Send email to producers to inform quantity sold items");
-//    }
+   @Scheduled(fixedRate = reloadTimer)
+    public void scheduleTaskWithFixedRate() {
+       Platform.runLater(() -> {
+           if(StageInitializer.currentResource == StageInitializer.guiRut) {
+               updateData();
+           }
+       });
+    }
     @Override
     void updateData()
     {
@@ -166,19 +171,20 @@ public class GuiRutController extends BaseController implements Initializable {
             return;
         }
         String loaiGD = selectedRadioButton.getText();
-
         if(loaiGD.equals("Gửi tiền"))
             loaiGD = "GT";
         else loaiGD = "RT";
-        System.out.println(soTK);
-        System.out.println(soTien);
-        System.out.println(ngayGD);
-        System.out.println(loaiGD);
-        System.out.println(maNV);
+
         Map<String, String> result = guiRutRepository.send(soTK, soTien, ngayGD, loaiGD, maNV );
-        String msg = result.get("MSG");
         String isSuccess = result.get("ISSUCCESS");
-        FXAlerts.info(msg);
+        String msg = result.get("MSG");
+        if(isSuccess.equals("1")) {
+            FXAlerts.info(msg);
+        }
+        else {
+            FXAlerts.error(msg);
+        }
+        updateData();
     }
     @Override
     void initValidation()

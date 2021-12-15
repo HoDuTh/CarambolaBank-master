@@ -1,6 +1,7 @@
 package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
+import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.DateAndTimePicker;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entitygeneral.GDChuyenTien;
@@ -10,6 +11,7 @@ import com.thuan.carambola.repositorygeneral.ChuyenTienRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
 import com.thuan.carambola.setting.ValidationValue;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +30,7 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -142,10 +145,14 @@ public class ChuyenTienController extends BaseController implements Initializabl
         initTimePicker();
         super.initialize(location, resources);
     }
-//    @Scheduled(fixedRate = 2000)
-//    public void scheduleTaskWithFixedRate() {
-//        log.info("Send email to producers to inform quantity sold items");
-//    }
+    @Scheduled(fixedRate = reloadTimer)
+    public void scheduleTaskWithFixedRate() {
+        Platform.runLater(() -> {
+            if(StageInitializer.currentResource == StageInitializer.chuyenTien) {
+                updateData();
+            }
+        });
+    }
     @Override
     void btnThem(ActionEvent actionEvent) {
         tfSoTKChuyen.setText("");
@@ -186,10 +193,18 @@ public class ChuyenTienController extends BaseController implements Initializabl
             FXAlerts.warning("Thiếu nhân viên thực hiện công việc");
             return;
         }
+        boolean check = FXAlerts.confirm(String.format("Bạn có chắc chắn muốn thực hiện chuyển tiền từ tài khoản %s đến tài khoản %s", soTKChuyen, soTKNhan));
+        if(!check) return;
         Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, soTien, ngayGD, maNV );
         String msg = result.get("MSG");
         String isSuccess = result.get("ISSUCCESS");
-        FXAlerts.info(msg);
+        if(isSuccess.equals("1")) {
+            FXAlerts.info(msg);
+        }
+        else {
+            FXAlerts.error(msg);
+        }
+        updateData();
     }
 
     @Override
