@@ -20,7 +20,7 @@ public class JavaFXApplication extends Application {
     public static String server;
 
     {
-        maNV = "NONE";
+        maNV = "0002";
         tenNV = "NONE";
         nhom = "ChiNhanh";
         phanManh = "Tân Định";

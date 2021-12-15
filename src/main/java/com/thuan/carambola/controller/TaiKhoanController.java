@@ -143,6 +143,11 @@ public class TaiKhoanController extends BaseController implements Initializable 
         unFilteredTaiKhoanDetail();
     }
     @Override
+    void initValidation()
+    {
+
+    }
+    @Override
     void initTableEvent()
     {
         initTableDoubleCLickOnRow();

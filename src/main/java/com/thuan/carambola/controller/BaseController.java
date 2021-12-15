@@ -6,6 +6,8 @@ import com.thuan.carambola.Service.DateTimeService;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,10 +23,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -70,13 +76,14 @@ public abstract class BaseController implements Initializable {
     //---------------LabelNhanVien--------------
 
     @FXML DatePicker dpNgay;
-    @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
 
     @FXML private Slider sliderHour;
     @FXML private Slider sliderMinute;
 
     @FXML TextField tfHour;
     @FXML TextField tfMinute;
+
+    @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
     Stack stack;
     PhanManhRepository phanManhRepository;
     Logger log = LoggerFactory.getLogger(BaseController.class);
@@ -92,20 +99,55 @@ public abstract class BaseController implements Initializable {
     abstract void initCBChiNhanhEvent();
     abstract void unFiltered();
     abstract void initTableEvent();
-    private void btnUpdate(ActionEvent actionEvent)
+    abstract void initValidation();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initPhanManh(phanManhRepository, cbChiNhanh);
+        updateData();
+        filtered();
+        initCBChiNhanhEvent();
+        initPermission();
+        initTableView();
+        intitButton();
+        intitPanel();
+        initMenu();
+        initNV();
+        initTableEvent();
+        initValidation();
+    }
+    String formatCurrency(BigInteger soTien)
     {
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        return currencyVN.format(soTien);
+    }
+    void formatSoTienToLabel(TextField tf, Label lb)
+    {
+        lb.textProperty().bindBidirectional(tf.textProperty(), new StringConverter<>() {
+            @Override
+            public String toString(String string) {
+                if(tf.getText().isBlank()) return "0";
+                return formatCurrency(new BigInteger(string));
+            }
+
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+
+        });
+    }
+    private void btnUpdate(ActionEvent actionEvent){
         updateData();
     }
-    void clearDateTime()
-    {
+    void clearDateTime(){
         dpNgay.getEditor().clear();
         dpNgay.setValue(null);
 
         tfHour.setText("0");
         tfMinute.setText("0");
     }
-    Instant getDateTime()
-    {
+    Instant getDateTime(){
         int hours = Integer.parseInt(tfHour.getText());
         int  minutes = Integer.parseInt(tfMinute.getText());
 
@@ -115,17 +157,14 @@ public abstract class BaseController implements Initializable {
                 .plus(hours, ChronoUnit.HOURS)
                 .plus(minutes, ChronoUnit.MINUTES);
     }
-    void initTimePicker()
-    {
+    void initTimePicker(){
         sliderHour.setMax(23);
         sliderMinute.setMax(59);
 
         LocalDateTime ldt = LocalDateTime.now();
+        tfHour.setText(String.valueOf(ldt.getHour()));
+        tfMinute.setText(String.valueOf(ldt.getMinute()));
 
-        tfHour.setText(String.valueOf(
-                ldt.getHour()));
-
-        tfMinute.setText("0");
         dpNgay.setValue(LocalDate.now());
 
         dpNgay.valueProperty().addListener((ov, oldValue, newValue) -> {
@@ -201,16 +240,96 @@ public abstract class BaseController implements Initializable {
         });
     }
 
-
-    void initPhanManh(PhanManhRepository phanManhRepository, ComboBox<VDsPhanmanhEntity> cbChiNhanh)
+    void valideSoTK(TextField soTK){
+        soTK.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    soTK.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        valideTextFieldLength(soTK, 9);
+    }
+    void valideMaNV(TextField soTK){
+        valideTextFieldLength(soTK, 10);
+    }
+    void valideNumberField(TextField tfOnlyNumber){
+        tfOnlyNumber.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                  tfOnlyNumber.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+    }
+    void valideCurrencyField(TextField tfOnlyMoney){
+        tfOnlyMoney.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (newValue.matches("\\d*")) {
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
+                    String newValueStr = formatter.format(Double.parseDouble(newValue));
+                    tfOnlyMoney.setText(newValueStr);
+                }
+            }
+        });
+    }
+    void valideSoTien(TextField soTien, BigInteger max,  BigInteger min){
+        valideNumberField(soTien);
+        soTien.focusedProperty().addListener(new ChangeListener<Boolean>() // giá trị nhỏ nhất chỉ báo lỗi khi người dùng thoát ra khỏi textfield
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+            {
+                if (!newPropertyValue)
+                {
+                    if(!soTien.getText().isBlank() && new BigInteger(soTien.getText()).compareTo(min) < 0)
+                    {
+                        soTien.setText(min.toString());
+                        FXAlerts.warning(String.format("Giá trị giao dịch nhỏ nhất là %d.\nĐặt mặc định là giá trị nhỏ nhất %d", min, min));
+                    }
+                }
+            }
+        });
+        soTien.textProperty().addListener(new ChangeListener<String>() // giá trị lớn nhất báo khi người dùng nhập vào
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if(soTien.getText().isBlank()) return;
+                BigInteger soTienValue = new BigInteger(soTien.getText());
+                if(soTienValue.compareTo(max) > 0) {
+                    FXAlerts.warning(String.format("Giá trị giao dịch lớn nhất là %d ", max));
+                    soTien.setText(oldValue);
+                }
+                else  if(soTienValue.compareTo(min) > 0 && soTienValue.compareTo(max) < 0)
+                    soTien.setText(soTienValue.toString());
+            }
+        });
+    }
+    void valideTextFieldLength(TextField textField, int length)
     {
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+               if(textField.getLength() > length)
+                    textField.setText(oldValue);
+            }
+        });
+    }
+    void initPhanManh(PhanManhRepository phanManhRepository, ComboBox<VDsPhanmanhEntity> cbChiNhanh){
         List<VDsPhanmanhEntity> list = phanManhRepository.findAll();
         ObservableList<VDsPhanmanhEntity> options =
                 FXCollections.observableArrayList(list);
         cbChiNhanh.setItems(options);
     }
-    void intitButton()
-    {
+    void intitButton(){
         btnThem.setOnAction(this::btnThem);
         btnXoa.setOnAction(this::btnXoa);
         btnSua.setOnAction(this::btnSua);
@@ -218,8 +337,7 @@ public abstract class BaseController implements Initializable {
         btnHoanTac.setOnAction(this::btnHoanTac);
         btnUpdate.setOnAction(this::btnUpdate);
     }
-    void intitPanel()
-    {
+    void intitPanel(){
         pnSSS.setOnMousePressed(event -> {
             unFiltered();
         });
@@ -228,7 +346,6 @@ public abstract class BaseController implements Initializable {
     public BaseController(PhanManhRepository phanManhRepository) {
         this.phanManhRepository = phanManhRepository;
     }
-
     private void setMenuItemChuyenTien(ActionEvent actionEvent)
     {try {StageInitializer.setScene("chuyenTien");} catch (IOException e)
     {FXAlerts.error("Trang này đang không hoạt động");}}
@@ -273,18 +390,5 @@ public abstract class BaseController implements Initializable {
             }
         }
     }
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        initPhanManh(phanManhRepository, cbChiNhanh);
-        updateData();
-        filtered();
-        initCBChiNhanhEvent();
-        initPermission();
-        initTableView();
-        intitButton();
-        intitPanel();
-        initMenu();
-        initNV();
-        initTableEvent();
-    }
+
 }

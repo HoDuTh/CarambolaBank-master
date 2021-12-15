@@ -125,6 +125,8 @@
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
                                     </TextField>
+                                    <Label prefHeight="15.0" prefWidth="122.0" />
+                                    <Label fx:id="lableSoTienFormated" prefHeight="31.0" prefWidth="290.0" />
                                  </children>
                                  <padding>
                                     <Insets top="20.0" />

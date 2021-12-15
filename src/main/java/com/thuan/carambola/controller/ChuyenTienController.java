@@ -9,6 +9,7 @@ import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.ChuyenTienRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import com.thuan.carambola.setting.ValidationValue;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.jfoenix.controls.JFXDatePicker;
@@ -60,19 +62,13 @@ public class ChuyenTienController extends BaseController implements Initializabl
     @FXML private TableColumn<GDChuyenTien, String> tcSoTien;
     @FXML private TableColumn<GDChuyenTien, String> tcHoTenNV;
 
-    @FXML private Slider sliderHour;
-    @FXML private Slider sliderMinute;
-
-    @FXML private TextField tfHour;
-    @FXML private TextField tfMinute;
-
+    @FXML private Label lableSoTienFormated;
 
     @FXML private TextField tfSoTKChuyen;
     @FXML private TextField tfSoTien;
     @FXML private TextField tfSoTKNhan;
     @FXML private TextField tfSearch;
 
-    @FXML private FlowPane pnSSS;
     TaiKhoanRepository taiKhoanRepository;
     ChuyenTienRepository chuyenTienRepository;
     PhanManhRepository phanManhRepository;
@@ -96,8 +92,7 @@ public class ChuyenTienController extends BaseController implements Initializabl
     {
         initTableDoubleCLickOnRow();
     }
-    private void initTableDoubleCLickOnRow()
-    {
+    private void initTableDoubleCLickOnRow(){
         tbTaiKhoan.setRowFactory(tv -> {
             TableRow<TaiKhoan> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -145,7 +140,10 @@ public class ChuyenTienController extends BaseController implements Initializabl
         initTimePicker();
         super.initialize(location, resources);
     }
-
+    @Scheduled(fixedRate = 2000)
+    public void scheduleTaskWithFixedRate() {
+        log.info("Send email to producers to inform quantity sold items");
+    }
     @Override
     void btnThem(ActionEvent actionEvent) {
         tfSoTKChuyen.setText("");
@@ -154,25 +152,40 @@ public class ChuyenTienController extends BaseController implements Initializabl
 
         clearDateTime();
     }
-
     @Override
     void btnXoa(ActionEvent actionEvent) {
 
     }
-
     @Override
     void btnSua(ActionEvent actionEvent) {
         tfSoTKChuyen.setText(getDateTime().toString());
     }
-
     @Override
     void btnGhi(ActionEvent actionEvent) {
         String soTKChuyen = tfSoTKChuyen.getText().replaceAll(" ", "").trim();
         String soTKNhan = tfSoTKNhan.getText().replaceAll(" ", "").trim();
-        BigInteger soTien = new BigInteger(tfSoTien.getText());
+        BigInteger soTien = new BigInteger("0");
+        if(soTKChuyen.isBlank()){
+            FXAlerts.warning("Chưa nhập số tài khoản chuyển");
+            return;
+        }
+        if(soTKNhan.isBlank()){
+            FXAlerts.warning("Chưa nhập số tài khoản nhận");
+            return;
+        }
+        if(tfSoTien.getText().isBlank()) {
+            FXAlerts.warning("Chưa nhập số tiền cần chuyển");
+            return;
+        }
+        else {
+            soTien = new BigInteger(tfSoTien.getText());
+        }
         Instant ngayGD = getDateTime();
         String maNV = JavaFXApplication.maNV;
-
+        if(maNV.isBlank()) {
+            FXAlerts.warning("Thiếu nhân viên thực hiện công việc");
+            return;
+        }
         Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, soTien, ngayGD, maNV );
         String msg = result.get("MSG");
         String isSuccess = result.get("ISSUCCESS");
@@ -191,6 +204,14 @@ public class ChuyenTienController extends BaseController implements Initializabl
         obListGD = FXCollections.observableArrayList(list);
         obListTK = FXCollections.observableArrayList(listTK);
         initTableView();
+    }
+    @Override
+    void initValidation()
+    {
+        valideSoTK(tfSoTKChuyen);
+        valideSoTK(tfSoTKNhan);
+        valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDChuyenTien);
+        formatSoTienToLabel(tfSoTien, lableSoTienFormated);
     }
     @Override
     void initTableView() {

@@ -85,7 +85,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     public void onApplicationEvent(StageReadyEvent event) {
         try {
             primaryStage = event.getStage();
-            setScene(khachHang);
+            setScene(chuyenTien);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

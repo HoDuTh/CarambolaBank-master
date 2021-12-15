@@ -13,6 +13,7 @@ import com.thuan.carambola.repositorygeneral.ChuyenTienRepository;
 import com.thuan.carambola.repositorygeneral.GuiRutRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
+import com.thuan.carambola.setting.ValidationValue;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,11 +64,9 @@ public class GuiRutController extends BaseController implements Initializable {
     @FXML private TextField tfSoTK;
     @FXML private TextField tfSoTien;
     @FXML private ToggleGroup tgLoaiGD;
-    @FXML private DatePicker dpNgayGD;
 
+    @FXML private Label lableSoTienFormated;
 
-
-    @FXML private FlowPane pnSSS;
     @FXML private TextField tfSearch;
 
     TaiKhoanRepository taiKhoanRepository;
@@ -118,32 +117,31 @@ public class GuiRutController extends BaseController implements Initializable {
     void btnThem(ActionEvent actionEvent) {
         tfSoTK.setText("");
         tfSoTien.setText("");
-
-        dpNgayGD.getEditor().clear();
-        dpNgayGD.setValue(null);
-
+        clearDateTime();
     }
-
-    @Override
+    @Override //Không làm gì hết
     void btnXoa(ActionEvent actionEvent) {
-        //Không làm gì hết
-    }
 
-    @Override
+    }
+    @Override //Không làm gì hết
     void btnSua(ActionEvent actionEvent) {
-        //Không làm gì hết
-    }
 
+    }
+    @Override  //Không làm gì hết
+    void btnHoanTac(ActionEvent actionEvent) {
+
+    }
     @Override
     void btnGhi(ActionEvent actionEvent) {
 
     }
-
     @Override
-    void btnHoanTac(ActionEvent actionEvent) {
-        //Không làm gì hết
+    void initValidation()
+    {
+        valideSoTK(tfSoTK);
+        valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDGuiRut);
+        formatSoTienToLabel(tfSoTien, lableSoTienFormated);
     }
-
     @Override
     void initTableView() {
         list2Table(tc2HoTenNV, tc2LoaiGD, tc2NgayGD, tc2MaNV, tc2SoTK, tc2SoTien, tc2MaGD);

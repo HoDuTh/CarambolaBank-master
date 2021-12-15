@@ -161,6 +161,11 @@ public class NhanVienController extends BaseController implements Initializable 
         tbNhanVien.setItems(obList);
     }
     @Override
+    void initValidation()
+    {
+
+    }
+    @Override
     void initTableView()
     {
         list2Table(tc1ChiNhanh, tc1DiaChi, tc1Ho, tc1MaNV,  tc1Phai, tc1SoDT, tc1Ten, tc1TrangThaiXoa);

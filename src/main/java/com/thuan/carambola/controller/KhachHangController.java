@@ -176,6 +176,11 @@ public class KhachHangController  extends BaseController implements Initializabl
         tbKhachHang.getSelectionModel().clearSelection();
     }
     @Override
+    void initValidation()
+    {
+
+    }
+    @Override
     void initTableView()
     {
         list2Table(tc1ChiNhanh, tc1DiaChi, tc1Ho, tc1NgayCap,  tc1Phai, tc1SoDienThoai, tc1Ten, tc1CMND);
