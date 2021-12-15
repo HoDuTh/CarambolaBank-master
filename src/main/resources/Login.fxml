@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<AnchorPane prefHeight="494.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.Login">
+   <children>
+      <TextField fx:id="tfUsername" layoutX="189.0" layoutY="176.0" prefHeight="43.0" prefWidth="282.0" promptText="Nhập tên đăng nhập" />
+      <Button fx:id="btnLogin" layoutX="189.0" layoutY="332.0" mnemonicParsing="false" onAction="#buttonLogin" prefHeight="43.0" prefWidth="152.0" text="Đăng nhập" />
+      <PasswordField fx:id="tfPassword" layoutX="189.0" layoutY="243.0" prefHeight="43.0" prefWidth="282.0" promptText="Nhập mật khẩu" />
+      <ComboBox fx:id="cbChiNhanh" layoutX="189.0" layoutY="81.0" prefHeight="43.0" prefWidth="282.0" />
+      <Label layoutX="87.0" layoutY="80.0" prefHeight="43.0" prefWidth="86.0" text="Chi nhánh" />
+      <Label layoutX="87.0" layoutY="175.0" prefHeight="43.0" prefWidth="86.0" text="Tài khoản" />
+      <Label layoutX="87.0" layoutY="242.0" prefHeight="43.0" prefWidth="86.0" text="Mật khẩu" />
+      <Label fx:id="lbError" layoutX="90.0" layoutY="368.0" prefHeight="43.0" prefWidth="394.0" />
+      <Line endX="173.0" layoutX="299.0" layoutY="152.0" startX="-214.2000274658203" />
+      <Button fx:id="btnExit" layoutX="350.0" layoutY="332.0" mnemonicParsing="false"  prefHeight="43.0" prefWidth="116.0" text="Thoát" />
+   </children>
+</AnchorPane>

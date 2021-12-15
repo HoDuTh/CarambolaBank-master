@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.GuiRutController">
+   <children>
+      <MenuBar>
+         <menus>
+            <Menu fx:id="menuGiaoDich" mnemonicParsing="false" text="Giao dịch">
+               <items>
+                  <MenuItem fx:id="menuItemChuyenTien" mnemonicParsing="false" text="Chuyển tiền" />
+                  <MenuItem fx:id="menuItemGuiRut" mnemonicParsing="false" text="Gửi rút tiền" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuKhachHang" mnemonicParsing="false" text="Khách hàng">
+               <items>
+                  <MenuItem fx:id="menuItemKhachHang" mnemonicParsing="false" text="Tạo khách hàng" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuTaiKhoan" mnemonicParsing="false" text="Tài khoản">
+               <items>
+                  <MenuItem fx:id="menuItemTaiKhoan" mnemonicParsing="false" text="Tạo tài khoản" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuNhanVien" mnemonicParsing="false" text="Nhân viên">
+               <items>
+                  <MenuItem fx:id="menuItemNhanVien" mnemonicParsing="false" text="Thêm nhân viên" />
+                  <MenuItem fx:id="menuItemChuyenNhanVien" mnemonicParsing="false" text="Chuyển nhân viên" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuHeThong" mnemonicParsing="false" text="Hệ thống">
+               <items>
+                  <MenuItem fx:id="menuItemHeThong" mnemonicParsing="false" text="Tạo tài khoản đăng nhập" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuGioiThieu" mnemonicParsing="false" text="Giới thiệu">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Về chúng tôi" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuHuongDan" mnemonicParsing="false" text="Hướng dẫn" />
+         </menus>
+      </MenuBar>
+      <SplitPane dividerPositions="0.2505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
+         <items>
+            <AnchorPane fx:id="pInput" prefHeight="747.0" prefWidth="336.0">
+               <children>
+                  <FlowPane prefHeight="747.0" prefWidth="300.0">
+                     <children>
+                        <FlowPane fx:id="pnCN" disable="true" prefHeight="66.0" prefWidth="418.0">
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                           <children>
+                              <Label text="Chi nhánh">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </Label>
+                              <ComboBox fx:id="cbChiNhanh" prefHeight="25.0" prefWidth="342.0">
+                                 <FlowPane.margin>
+                                    <Insets />
+                                 </FlowPane.margin>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </ComboBox>
+                           </children>
+                        </FlowPane>
+                        <FlowPane fx:id="pnInput" disable="true">
+                           <children>
+                              <ToolBar prefHeight="40.0" prefWidth="426.0">
+                                 <items>
+                                    <Button fx:id="btnThem" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Thêm" />
+                                    <Button fx:id="btnXoa" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Xóa" />
+                                    <Button fx:id="btnGhi" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Ghi" />
+                                    <Button fx:id="btnHoanTac" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Hoàn tác" />
+                                    <Button fx:id="btnSua" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Sửa" />
+                                 </items>
+                              </ToolBar>
+                              <Separator prefHeight="0.0" prefWidth="419.0" />
+                              <FlowPane>
+                                 <children>
+                                    <FlowPane prefHeight="58.0" prefWidth="418.0">
+                                       <children>
+                                          <Label prefHeight="38.0" prefWidth="122.0" text="Tài khoản *">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="tfSoTK" prefHeight="38.0" prefWidth="292.0">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </TextField>
+                                       </children>
+                                       <padding>
+                                          <Insets top="20.0" />
+                                       </padding>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="41.0" prefWidth="418.0">
+                                       <children>
+                                          <Label prefHeight="38.0" prefWidth="122.0" text="Số tiền *">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="tfSoTien" prefHeight="38.0" prefWidth="291.0">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </TextField>
+                                       </children>
+                                       <padding>
+                                          <Insets top="20.0" />
+                                       </padding>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="41.0" prefWidth="418.0">
+                                       <children>
+                                          <Label prefHeight="38.0" prefWidth="123.0" text="Loại giao dịch *">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <RadioButton fx:id="rbGuiTien" mnemonicParsing="false" text="Gửi tiền">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="tgLoaiGD" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton fx:id="rbRutTien" mnemonicParsing="false" text="Rút tiền" toggleGroup="$tgLoaiGD">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </RadioButton>
+                                       </children>
+                                       <padding>
+                                          <Insets top="20.0" />
+                                       </padding>
+                                    </FlowPane>
+                                    <FlowPane>
+                                       <children>
+                                          <FlowPane prefHeight="41.0" prefWidth="418.0">
+                                             <children>
+                                                <Label prefHeight="38.0" prefWidth="124.0" text="Ngày giao dịch">
+                                                   <padding>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </padding>
+                                                </Label>
+                                                <DatePicker fx:id="dpNgay" prefHeight="38.0" prefWidth="165.0">
+                                                   <FlowPane.margin>
+                                                      <Insets top="10.0" />
+                                                   </FlowPane.margin>
+                                                </DatePicker>
+                                                <TextField fx:id="tfHour" prefHeight="30.0" prefWidth="30.0">
+                                                   <FlowPane.margin>
+                                                      <Insets left="10.0" right="10.0" top="10.0" />
+                                                   </FlowPane.margin>
+                                                </TextField>
+                                                <Label prefHeight="38.0" prefWidth="0.0" text=":" />
+                                                <TextField fx:id="tfMinute" prefHeight="30.0" prefWidth="30.0">
+                                                   <FlowPane.margin>
+                                                      <Insets left="10.0" right="10.0" top="10.0" />
+                                                   </FlowPane.margin>
+                                                </TextField>
+                                             </children>
+                                             <padding>
+                                                <Insets top="20.0" />
+                                             </padding>
+                                          </FlowPane>
+                                          <FlowPane prefHeight="65.0" prefWidth="418.0">
+                                             <children>
+                                                <FlowPane prefHeight="86.0" prefWidth="418.0">
+                                                   <FlowPane.margin>
+                                                      <Insets />
+                                                   </FlowPane.margin>
+                                                   <children>
+                                                      <FlowPane prefHeight="38.0" prefWidth="419.0">
+                                                         <FlowPane.margin>
+                                                            <Insets top="5.0" />
+                                                         </FlowPane.margin>
+                                                         <children>
+                                                            <Label prefHeight="38.0" prefWidth="48.0" text="Giờ">
+                                                               <padding>
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                            <Slider fx:id="sliderHour" blockIncrement="1.0" majorTickUnit="2.0" max="23.0" minorTickCount="1" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                         </children>
+                                                      </FlowPane>
+                                                      <FlowPane prefHeight="38.0" prefWidth="420.0">
+                                                         <FlowPane.margin>
+                                                            <Insets top="5.0" />
+                                                         </FlowPane.margin>
+                                                         <children>
+                                                            <Label prefHeight="38.0" prefWidth="48.0" text="Phút">
+                                                               <padding>
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                               </padding>
+                                                            </Label>
+                                                            <Slider fx:id="sliderMinute" blockIncrement="1.0" majorTickUnit="5.0" max="59.0" minorTickCount="5" prefHeight="38.0" prefWidth="370.0" showTickLabels="true" showTickMarks="true" />
+                                                         </children>
+                                                      </FlowPane>
+                                                   </children>
+                                                </FlowPane>
+                                             </children>
+                                          </FlowPane>
+                                       </children>
+                                    </FlowPane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="234.0" prefWidth="419.0">
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                           <children>
+                              <Separator prefHeight="2.0" prefWidth="419.0" />
+                              <FlowPane fx:id="pnSSS" prefHeight="209.0" prefWidth="332.0" />
+                              <ToolBar orientation="VERTICAL" prefHeight="147.0" prefWidth="87.0">
+                                 <items>
+                                    <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Cập nhật" />
+                                 </items>
+                              </ToolBar>
+                           </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="41.0" prefWidth="418.0">
+                           <children>
+                              <Label prefHeight="38.0" prefWidth="103.0" text="Tìm kiếm">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="tfSearch" prefHeight="38.0" prefWidth="312.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </TextField>
+                           </children>
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                        </FlowPane>
+                     </children>
+                  </FlowPane>
+               </children>
+            </AnchorPane>
+            <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0">
+                     <children>
+                        <SplitPane dividerPositions="0.5" layoutY="-1.0" orientation="VERTICAL" prefHeight="731.0" prefWidth="1080.0">
+                           <items>
+                              <TableView fx:id="tbTaiKhoan" prefHeight="400.0" prefWidth="1060.0">
+                                 <columns>
+                                    <TableColumn id="cmnd" fx:id="tc1SoTK" prefWidth="108.80004888772964" text="Số tài khoản" />
+                                    <TableColumn fx:id="tc1CMNDTK" prefWidth="107.20000457763672" text="CMND" />
+                                    <TableColumn fx:id="tc1HoTen" prefWidth="190.40003967285156" text="Họ và tên" />
+                                    <TableColumn fx:id="tc1SoDienThoai" prefWidth="91.99993896484375" text="Số điện thoại" />
+                                    <TableColumn fx:id="tc1SoDuTK" prefWidth="164.800048828125" text="Số dư" />
+                                    <TableColumn fx:id="tc1ChiNhanhTK" minWidth="2.93341064453125" prefWidth="139.2000732421875" text="Chi nhánh" />
+                                    <TableColumn fx:id="tc1NgayMoTK" prefWidth="164.39996337890625" text="Ngày mở " />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="tbGuiRut" prefHeight="364.0" prefWidth="1062.0">
+                                 <columns>
+                                    <TableColumn fx:id="tc2MaGD" prefWidth="108.80004888772964" text="Mã giao dịch" />
+                                    <TableColumn fx:id="tc2SoTK" prefWidth="122.4000244140625" text="Số tài khoản" />
+                                    <TableColumn fx:id="tc2SoTien" prefWidth="121.5999755859375" text="Số tiền" />
+                                    <TableColumn fx:id="tc2LoaiGD" prefWidth="101.5999755859375" text="Loại giao dịch" />
+                                    <TableColumn fx:id="tc2NgayGD" prefWidth="218.40011596679688" text="Ngày giao dịch" />
+                                    <TableColumn fx:id="tc2MaNV" prefWidth="195.9998779296875" text="Mã nhân viên" />
+                                    <TableColumn fx:id="tc2HoTenNV" prefWidth="220.80010986328125" text="Họ và tên nhân viên" />
+
+                                 </columns>
+                              </TableView>
+                           </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+         </items>
+      </SplitPane>
+      <FlowPane prefHeight="0.0" prefWidth="1920.0">
+         <children>
+            <Label fx:id="lbMaNV" text="HDT0001">
+               <FlowPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </FlowPane.margin>
+            </Label>
+            <Label fx:id="lbTenNV" text="Hoàng Đức Thuận">
+               <FlowPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </FlowPane.margin>
+            </Label>
+            <Label fx:id="lbNhom" text="NGANHANG">
+               <FlowPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </FlowPane.margin>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </FlowPane>
+   </children>
+</VBox>
