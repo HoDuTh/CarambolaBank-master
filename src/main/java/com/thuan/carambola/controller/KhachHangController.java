@@ -67,6 +67,7 @@ public class KhachHangController  extends BaseController implements Initializabl
     @FXML DatePicker dpNgay;
     KhachHangRepository khachHangRepository;
     ObservableList<KhachHang> obList;
+    Stack<Handle<KhachHang>> stack;
     Logger log = LoggerFactory.getLogger(KhachHangController.class);
     @Autowired
     public KhachHangController (KhachHangRepository khachHangRepository,
@@ -164,7 +165,28 @@ public class KhachHangController  extends BaseController implements Initializabl
     }
     @Override
     void btnXoa(ActionEvent actionEvent) {
+        KhachHang khachHang = tbKhachHang.getSelectionModel().getSelectedItem();
+        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn xóa khách hàng %s với số CMND là %s",khachHang.getHoTen(), khachHang.getId()));
+        if(!check) return;
 
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = khachHangRepository.delete(khachHang.getId());
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    Handle<KhachHang> handle = new Handle<>();
+                    handle.setEntity(khachHang);
+                    handle.setAction("xoa");
+                    stack.push(handle);
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
     }
 
     @Override
@@ -195,7 +217,7 @@ public class KhachHangController  extends BaseController implements Initializabl
             return;
         }
         String soDT = tfSoDienThoai.getText();
-        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.of("UTC")).toInstant();
         RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
         if(selectedRadioButton == null)
         {
@@ -228,6 +250,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                     Handle<KhachHang> handle = new Handle<>();
                     handle.setEntity(khachHang);
                     handle.setAction("sua");
+                    stack.push(handle);
                     FXAlerts.info(msg);
                 }
                 else {
@@ -265,7 +288,7 @@ public class KhachHangController  extends BaseController implements Initializabl
             return;
         }
         String soDT = tfSoDienThoai.getText();
-        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh")).toInstant();
         RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
         if(selectedRadioButton == null)
         {
@@ -274,18 +297,18 @@ public class KhachHangController  extends BaseController implements Initializabl
         }
         String phai = selectedRadioButton.getText();
         String hoTen = ho + " " + ten;
-        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn tạo khách hàng với thông tin:" +
-                "\nCMND: %s" +
-                "\nHọ và tên: %s" +
-                "\nĐịa chỉ: %s" +
-                "\nPhái: %s" +
-                "\nNgày cấp: %s" +
-                "\nSố điện thoại: %s ", cmnd, hoTen, diaChi, phai, ngay.toString(), soDT));
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có thực sự muốn tạo khách hàng với thông tin:
+                CMND: %s
+                Họ và tên: %s
+                Địa chỉ: %s
+                Phái: %s
+                Ngày cấp: %s
+                Số điện thoại: %s\s""", cmnd, hoTen, diaChi, phai, ngay.toString(), soDT));
         if(!check) return;
         new Thread(()->{
             Platform.runLater(() -> {
                 Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
-
                 String isSuccess = result.get("ISSUCCESS");
                 String msg = result.get("MSG");
                 if(isSuccess.equals("1")) {
@@ -300,6 +323,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                     Handle<KhachHang> handle = new Handle<>();
                     handle.setEntity(kh);
                     handle.setAction("ghi");
+                    stack.push(handle);
                     FXAlerts.info(msg);
                 }
                 else {
@@ -308,12 +332,122 @@ public class KhachHangController  extends BaseController implements Initializabl
                 updateData();
             });
         }).start();
-
     }
 
     @Override
     void btnHoanTac(ActionEvent actionEvent) {
-
+        if(stack.isEmpty()) {
+            FXAlerts.info("Không còn tác vụ để hòa tác");
+            return;
+        }
+        Handle<KhachHang> handle = stack.pop();
+        KhachHang khachHang = handle.getEntity();
+        boolean check;
+        switch (handle.getAction()) {
+            case "ghi" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn loại bỏ việc thêm khách hàng với thông tin:
+                                CMND: %s
+                                Họ và tên:  %s
+                                Địa chỉ:    %s
+                                Phái:       %s
+                                Ngày cấp:   %s
+                                Số điện thoại: %s\s""",
+                        khachHang.getId(),
+                        khachHang.getHoTen(),
+                        khachHang.getDiaChi(),
+                        khachHang.getPhai(),
+                        khachHang.getNgayCap(),
+                        khachHang.getSoDT())); if (!check) return;
+                new Thread(() -> {
+                    Platform.runLater(() -> {
+                        Map<String, String> result = khachHangRepository.delete(khachHang.getId());
+                        String isSuccess = result.get("ISSUCCESS");
+                        String msg = result.get("MSG");
+                        if (isSuccess.equals("1")) {
+                            FXAlerts.info(msg);
+                        } else {
+                            FXAlerts.error(msg);
+                        }
+                        updateData();
+                    });
+                }).start();
+            } case "sua" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn hoàn lại khách hàng với thông tin:
+                                CMND: %s
+                                Họ và tên:  %s
+                                Địa chỉ:    %s
+                                Phái:       %s
+                                Ngày cấp:   %s
+                                Số điện thoại: %s\s""",
+                        khachHang.getId(),
+                        khachHang.getHoTen(),
+                        khachHang.getDiaChi(),
+                        khachHang.getPhai(),
+                        khachHang.getNgayCap(),
+                        khachHang.getSoDT())); if (!check) return;
+                new Thread(() -> {
+                    Platform.runLater(() -> {
+                        Map<String, String> result = khachHangRepository.edit(
+                                khachHang.getId(),
+                                khachHang.getHo(),
+                                khachHang.getTen(),
+                                khachHang.getDiaChi(),
+                                khachHang.getPhai(),
+                                khachHang.getNgayCap(),
+                                khachHang.getSoDT()
+                        );
+                        String isSuccess = result.get("ISSUCCESS");
+                        String msg = result.get("MSG");
+                        if (isSuccess.equals("1")) {
+                            FXAlerts.info(msg);
+                        } else {
+                            FXAlerts.error(msg);
+                        }
+                        updateData();
+                    });
+                }).start();
+            } case "xoa" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn hoàn tác việc xóa khách hàng với thông tin:
+                                CMND: %s
+                                Họ và tên: %s
+                                Địa chỉ: %s
+                                Phái: %s
+                                Ngày cấp: %s
+                                Số điện thoại: %s\s""",
+                        khachHang.getId(),
+                        khachHang.getHoTen(),
+                        khachHang.getDiaChi(),
+                        khachHang.getPhai(),
+                        khachHang.getNgayCap().toString(),
+                        khachHang.getSoDT()));
+                if (!check) return;
+                new Thread(() -> {
+                    Platform.runLater(() -> {
+                        Map<String, String> result = khachHangRepository.add(
+                                khachHang.getId(),
+                                khachHang.getHo(),
+                                khachHang.getTen(),
+                                khachHang.getDiaChi(),
+                                khachHang.getPhai(),
+                                khachHang.getNgayCap(),
+                                khachHang.getSoDT());
+                        String isSuccess = result.get("ISSUCCESS");
+                        String msg = result.get("MSG");
+                        if (isSuccess.equals("1")) {
+                            FXAlerts.info(msg);
+                        } else {
+                            FXAlerts.error(msg);
+                        }
+                        updateData();
+                    });
+                }).start();
+            } default -> {
+                FXAlerts.info("Tác vụ đã lưu không phù hợp");
+            }
+        }
     }
     @Override
     void filtered() {

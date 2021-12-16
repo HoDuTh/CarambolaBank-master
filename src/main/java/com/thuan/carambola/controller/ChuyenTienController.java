@@ -5,6 +5,7 @@ import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.DateAndTimePicker;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entitygeneral.GDChuyenTien;
+import com.thuan.carambola.entitygeneral.KhachHang;
 import com.thuan.carambola.entitygeneral.TaiKhoan;
 import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.ChuyenTienRepository;
@@ -79,7 +80,7 @@ public class ChuyenTienController extends BaseController implements Initializabl
 
     ObservableList<TaiKhoan> obListTK;
     ObservableList<GDChuyenTien> obListGD;
-
+    Stack<Handle<GDChuyenTien>> stack;
     Logger log = LoggerFactory.getLogger(ChuyenTienController.class);
     @Autowired
     public ChuyenTienController (ChuyenTienRepository chuyenTienRepository,

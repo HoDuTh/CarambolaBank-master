@@ -77,7 +77,7 @@ public class GuiRutController extends BaseController implements Initializable {
 
     ObservableList<TaiKhoan> obListTK;
     ObservableList<GDGoiRut> obListGD;
-
+    Stack stack;
     Logger log = LoggerFactory.getLogger(GuiRutController.class);
     @Autowired
     public GuiRutController( TaiKhoanRepository taiKhoanRepository,

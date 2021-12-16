@@ -66,7 +66,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
     TaiKhoanRepository taiKhoanRepository;
     KhachHangRepository khachHangRepository;
     PhanManhRepository phanManhRepository;
-
+    Stack<Handle<TaiKhoan>> stack;
     ObservableList<TaiKhoan> obListTK;
     ObservableList<KhachHang> obListKH;
     Logger log = LoggerFactory.getLogger(TaiKhoanController.class);

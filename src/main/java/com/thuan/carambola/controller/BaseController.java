@@ -83,7 +83,7 @@ public abstract class BaseController implements Initializable {
     @FXML TextField tfMinute;
 
     @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
-    Stack stack;
+
     PhanManhRepository phanManhRepository;
     Logger log = LoggerFactory.getLogger(TaiKhoanController.class);
     final long reloadTimer = 300000;

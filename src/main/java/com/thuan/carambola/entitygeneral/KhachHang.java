@@ -7,7 +7,10 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -135,11 +138,13 @@ public class KhachHang {
         return new SimpleStringProperty(this.getHoTen());
     }
     public StringProperty getNgayCapProperty() {
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern(PatternSetting.date)
-                .withLocale(new Locale("vi", "VN"))
-                .withZone(ZoneId.of("UTC"));
-        return new SimpleStringProperty(formatter.format(this.getNgayCap()));
+//        DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+//        DateTimeFormatter formatter = DateTimeFormatter
+//                .ofPattern(PatternSetting.date)
+//                .withLocale(new Locale("vi", "VN"))
+//                .withZone(ZoneId.of("UTC"));
+//        return new SimpleStringProperty(formatter.format(this.getNgayCap()));
+        return new SimpleStringProperty(LocalDate.ofInstant(this.getNgayCap(), ZoneId.systemDefault()).toString());
     }
 
     @Override

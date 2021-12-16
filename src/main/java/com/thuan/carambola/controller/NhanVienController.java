@@ -5,6 +5,7 @@ import com.thuan.carambola.Service.DateTimeService;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entitygeneral.GDChuyenTien;
+import com.thuan.carambola.entitygeneral.GDGoiRut;
 import com.thuan.carambola.entitygeneral.KhachHang;
 import com.thuan.carambola.entitygeneral.NhanVien;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
@@ -61,7 +62,7 @@ public class NhanVienController extends BaseController implements Initializable 
 
     NhanVienRepository nhanVienRepository;
     PhanManhRepository phanManhRepository;
-
+    Stack<Handle<NhanVien>> stack;
     ObservableList<NhanVien> obList;
     Logger log = LoggerFactory.getLogger(NhanVienController.class);
     @Autowired
