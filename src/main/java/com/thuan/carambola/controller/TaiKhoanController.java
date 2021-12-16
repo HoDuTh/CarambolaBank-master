@@ -113,6 +113,9 @@ public class TaiKhoanController extends BaseController implements Initializable 
     }
     @Override
     void btnThem(ActionEvent actionEvent) {
+        boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
+        if(!check) return;
+
         tfCMDN.setText("");
 //        tfSoDu.setText("");
         tfSoTK.setText("");
@@ -123,12 +126,69 @@ public class TaiKhoanController extends BaseController implements Initializable 
     @Override
     void btnXoa(ActionEvent actionEvent) {
         TaiKhoan taiKhoan = tbTaiKhoan.getSelectionModel().getSelectedItem();
-        Map<String, String> result = taiKhoanRepository.delete(taiKhoan.getId());
-        FXAlerts.info(result.get("MSG"));
+        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn xóa tài khoản %s", taiKhoan.getId()));
+        if(!check) return;
+
+        new Thread(()->{
+            Platform.runLater(() -> {
+            Map<String, String> result = taiKhoanRepository.delete(taiKhoan.getId());
+            String isSuccess = result.get("ISSUCCESS");
+            String msg = result.get("MSG");
+            if(isSuccess.equals("1")) {
+                Handle<TaiKhoan> handle = new Handle<>();
+                handle.setEntity(taiKhoan);
+                handle.setAction("xoa");
+                FXAlerts.info(msg);
+            }
+            else {
+                FXAlerts.error(msg);
+            }
+            updateData();
+            });
+        }).start();
+
     }
 
     @Override
     void btnSua(ActionEvent actionEvent) {
+
+        TaiKhoan taiKhoan = tbTaiKhoan.getSelectionModel().getSelectedItem();
+        if(taiKhoan == null)
+        {
+            FXAlerts.warning("Chưa chọn tài khoản để sửa");
+            return;
+        }
+        String cmnd = tfCMDN.getText();
+        String soTK = taiKhoan.getId();
+        Instant ngay = getDateTime();
+        if(cmnd.isBlank())
+        {
+            FXAlerts.warning("Chứng minh nhân dân không được để trống");
+            return;
+        }
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có muốn thay đổi thông tin:
+                Số tài khoản: %s\s
+                CMND:  %s \t\t\t-> %s
+                Ngày tạo:  %s \t-> %s""", soTK, taiKhoan.getCmnd(), cmnd, taiKhoan.getNgayMoTK(), ngay.toString()));
+        if(!check) return;
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = taiKhoanRepository.edit(cmnd, soTK, ngay);
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    Handle<TaiKhoan> handle = new Handle<>();
+                    handle.setEntity(taiKhoan);
+                    handle.setAction("sua");
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
 
     }
 
@@ -137,25 +197,42 @@ public class TaiKhoanController extends BaseController implements Initializable 
         String cmnd = tfCMDN.getText();
         String soTK = tfSoTK.getText();
         Instant ngay = getDateTime();
-
-        Map<String, String> result = taiKhoanRepository.add(cmnd, soTK, ngay);
-
-        String isSuccess = result.get("ISSUCCESS");
-        String msg = result.get("MSG");
-        if(isSuccess.equals("1")) {
-            TaiKhoan tk = new TaiKhoan();
-            tk.setId(soTK);
-            tk.setCmnd(cmnd);
-            tk.setNgayMoTK(ngay);
-            Handle<TaiKhoan> handle = new Handle<>();
-            handle.setEntity(tk);
-            handle.setAction("ghi");
-            FXAlerts.info(msg);
+        if(cmnd.isBlank())
+        {
+            FXAlerts.warning("Chứng minh nhân dân không được để trống");
+            return;
         }
-        else {
-            FXAlerts.error(msg);
+        if(soTK.isBlank())
+        {
+            FXAlerts.warning("Số tài khoản không được để trống");
+            return;
         }
-        updateData();
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có thực sự muốn tạo tài khoản %s
+                CMND: %s\s
+                Ngày tạo: %s""", soTK, cmnd, ngay.toString()));
+        if(!check) return;
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = taiKhoanRepository.add(cmnd, soTK, ngay);
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    TaiKhoan tk = new TaiKhoan();
+                    tk.setId(soTK);
+                    tk.setCmnd(cmnd);
+                    tk.setNgayMoTK(ngay);
+                    Handle<TaiKhoan> handle = new Handle<>();
+                    handle.setEntity(tk);
+                    handle.setAction("ghi");
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
     }
 
     @Override
@@ -169,6 +246,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
         KhachHangController.filteredKhachHang( obListKH, tfSearch, tbKhachHang); // tìm kiếm khách hàng sử dụng textbox tìm kiếm
         filteredTaiKhoanDetail(obListTK, tbKhachHang, tbTaiKhoan); // tìm kiếm tài khoản của khách hàng sử dụng tableselection
         unFilteredTaiKhoanDetail();
+        ChuyenTienController.filteredTaiKhoan(obListTK, tfSoTK, tbTaiKhoan);
     }
     @Override
     void initValidation()
@@ -188,6 +266,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     KhachHang khachHang = row.getItem();
+                    if(khachHang == null) return;
                     boolean check;
                     String newCMND = khachHang.getId();
                     String tfCMNDValue = tfCMDN.getText();
@@ -207,8 +286,9 @@ public class TaiKhoanController extends BaseController implements Initializable 
         tbTaiKhoan.setRowFactory(tv -> {
             TableRow<TaiKhoan> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                if (event.getClickCount() == 2 || event.getClickCount() == 1 && (! row.isEmpty()) ) {
                     TaiKhoan taiKhoan = row.getItem();
+                    if(taiKhoan == null) return;
                     boolean check;
                     if(taiKhoan.getId().equals(tfSoTK.getText())) return;
                     if(!checkEmtyInput())

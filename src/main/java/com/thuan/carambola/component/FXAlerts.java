@@ -16,6 +16,7 @@ public class FXAlerts {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setContentText(massage);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
     }
     public static void error(String massage) {
@@ -35,6 +36,7 @@ public class FXAlerts {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setContentText(massage);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> option =  alert.showAndWait();
         return option.isPresent() && option.get() == ButtonType.OK;
     }
@@ -49,8 +51,8 @@ public class FXAlerts {
             alert.getButtonTypes().add(new ButtonType(a));
         }
         alert.getButtonTypes().add(new ButtonType("Thoát", ButtonBar.ButtonData.CANCEL_CLOSE));
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> option =  alert.showAndWait();
         return option.get().getText();
-
     }
 }

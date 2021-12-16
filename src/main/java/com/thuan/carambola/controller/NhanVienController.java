@@ -137,6 +137,9 @@ public class NhanVienController extends BaseController implements Initializable 
     }
     @Override
     void btnThem(ActionEvent actionEvent) {
+        boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
+        if(!check) return;
+
         tfMANV.setText("");
         tfDiaChi.setText("");
         tfHo.setText("");

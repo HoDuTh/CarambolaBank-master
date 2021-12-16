@@ -155,6 +155,9 @@ public class ChuyenTienController extends BaseController implements Initializabl
     }
     @Override
     void btnThem(ActionEvent actionEvent) {
+        boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
+        if(!check) return;
+
         tfSoTKChuyen.setText("");
         tfSoTien.setText("");
         tfSoTKNhan.setText("");
@@ -193,18 +196,30 @@ public class ChuyenTienController extends BaseController implements Initializabl
             FXAlerts.warning("Thiếu nhân viên thực hiện công việc");
             return;
         }
-        boolean check = FXAlerts.confirm(String.format("Bạn có chắc chắn muốn thực hiện chuyển tiền từ tài khoản %s đến tài khoản %s", soTKChuyen, soTKNhan));
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có chắc chắn muốn thực hiện chuyển tiền\040
+                Từ tài khoản:   %s\040
+                Đến tài khoản:  %s
+                Với số tiền là:  %s""",soTKChuyen, soTKNhan, formatCurrency(soTien)));
         if(!check) return;
-        Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, soTien, ngayGD, maNV );
-        String msg = result.get("MSG");
-        String isSuccess = result.get("ISSUCCESS");
-        if(isSuccess.equals("1")) {
-            FXAlerts.info(msg);
-        }
-        else {
-            FXAlerts.error(msg);
-        }
-        updateData();
+
+        BigInteger finalSoTien = soTien; // Do cái java nó yêu cầu chứ em không có muốn làm như vậy đâu
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, finalSoTien, ngayGD, maNV );
+                String msg = result.get("MSG");
+                String isSuccess = result.get("ISSUCCESS");
+                if(isSuccess.equals("1")) {
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
+
+
     }
 
     @Override

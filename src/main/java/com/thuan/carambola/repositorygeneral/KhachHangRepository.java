@@ -30,7 +30,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
                @Param("SODT") String soDT);
 
     @Transactional
-    @Procedure("SP_CAPNHAT_THONGTIN_KHACHHANG") // Chưa check
+    @Procedure("SP_CAPNHAT_THONGTIN_KHACHANG") // Chưa check
     Map<String, String> edit(@Param("CMND") String cmnd,
                              @Param("HO") String ho,
                              @Param("TEN") String ten,

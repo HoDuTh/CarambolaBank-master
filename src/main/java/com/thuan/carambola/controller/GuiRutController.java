@@ -127,6 +127,8 @@ public class GuiRutController extends BaseController implements Initializable {
     }
     @Override
     void btnThem(ActionEvent actionEvent) {
+        boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
+        if(!check) return;
         tfSoTK.setText("");
         tfSoTien.setText("");
         clearDateTime();
@@ -175,16 +177,28 @@ public class GuiRutController extends BaseController implements Initializable {
             loaiGD = "GT";
         else loaiGD = "RT";
 
-        Map<String, String> result = guiRutRepository.send(soTK, soTien, ngayGD, loaiGD, maNV );
-        String isSuccess = result.get("ISSUCCESS");
-        String msg = result.get("MSG");
-        if(isSuccess.equals("1")) {
-            FXAlerts.info(msg);
-        }
-        else {
-            FXAlerts.error(msg);
-        }
-        updateData();
+        BigInteger finalSoTien = soTien;
+        String finalLoaiGD = loaiGD;
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có chắc chắn muốn thực hiện %s\040
+                Với tài khoản:   %s\040
+                Với số tiền là:  %s""", selectedRadioButton.getText(), soTK,  formatCurrency(soTien)));
+        if(!check) return;
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, ngayGD, finalLoaiGD, maNV );
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
+
     }
     @Override
     void initValidation()

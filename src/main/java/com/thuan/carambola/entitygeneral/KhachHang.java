@@ -32,7 +32,7 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
         }),
-        @NamedStoredProcedureQuery(name = "KhachHang.edit", procedureName = "SP_CAPNHAT_THONGTIN_KHACHHANG", parameters = {
+        @NamedStoredProcedureQuery(name = "KhachHang.edit", procedureName = "SP_CAPNHAT_THONGTIN_KHACHANG", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),

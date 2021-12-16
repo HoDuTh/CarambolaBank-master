@@ -7,6 +7,7 @@ import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entitygeneral.GDChuyenTien;
 import com.thuan.carambola.entitygeneral.GDGoiRut;
 import com.thuan.carambola.entitygeneral.KhachHang;
+import com.thuan.carambola.entitygeneral.TaiKhoan;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.KhachHangRepository;
@@ -98,20 +99,20 @@ public class KhachHangController  extends BaseController implements Initializabl
     private void initTableDoubleCLickOnRow()
     {
             tbKhachHang.setRowFactory(tv -> {
-            TableRow<KhachHang> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    KhachHang khachHang = row.getItem();
-                    boolean check;
-                    if(khachHang.getId().equals(tfCMND.getText())) return;
-                    if(!checkEmtyInput()){
-                        check = FXAlerts.confirm(String.format("Chỉnh sửa khách hàng %s", khachHang.getHoTen()));
-                        if(!check) return;
+                TableRow<KhachHang> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        KhachHang khachHang = row.getItem();
+                        boolean check;
+                        if(khachHang.getId().equals(tfCMND.getText())) return;
+                        if(!checkEmtyInput()){
+                            check = FXAlerts.confirm(String.format("Chỉnh sửa khách hàng %s", khachHang.getHoTen()));
+                            if(!check) return;
+                        }
+                        insertDataToInputBox(khachHang);
                     }
-                    insertDataToInputBox(khachHang);
-                }
-            });
-            return row ;
+                });
+                return row ;
             });
     }
     private void insertDataToInputBox(KhachHang khachHang)
@@ -128,8 +129,8 @@ public class KhachHangController  extends BaseController implements Initializabl
         }
         Instant ngayCap = khachHang.getNgayCap();
         dpNgay.setValue(DateTimeService.get(ngayCap));
-        tfHour.setText(String.valueOf(DateTimeService.getHour(ngayCap)));
-        tfMinute.setText(String.valueOf(DateTimeService.getMinute(ngayCap)));
+//        tfHour.setText(String.valueOf(DateTimeService.getHour(ngayCap)));
+//        tfMinute.setText(String.valueOf(DateTimeService.getMinute(ngayCap)));
     }
     @Override
     void updateData()
@@ -141,13 +142,14 @@ public class KhachHangController  extends BaseController implements Initializabl
 
     @Override
     void btnThem(ActionEvent actionEvent) {
+        boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
+        if(!check) return;
+
         tfCMND.setText("");
         tfDiaChi.setText("");
         tfHo.setText("");
         tfSoDienThoai.setText("");
         tfTen.setText("");
-        tfHour.setText("");
-        tfMinute.setText("");
         dpNgay.getEditor().clear();
         dpNgay.setValue(null);
     }
@@ -167,15 +169,31 @@ public class KhachHangController  extends BaseController implements Initializabl
 
     @Override
     void btnSua(ActionEvent actionEvent) {
-
-    }
-
-    @Override
-    void btnGhi(ActionEvent actionEvent) {
-        String cmnd = tfCMND.getText();
+        KhachHang khachHang = tbKhachHang.getSelectionModel().getSelectedItem();
+        if(khachHang == null)
+        {
+            FXAlerts.warning("Chưa chọn khách hàng để sửa");
+            return;
+        }
+        String cmnd = khachHang.getId();
         String ho = tfHo.getText();
+        if(ho.isBlank())
+        {
+            FXAlerts.warning("Thiếu họ");
+            return;
+        }
         String ten = tfTen.getText();
+        if(ten.isBlank())
+        {
+            FXAlerts.warning("Thiếu tên");
+            return;
+        }
         String diaChi = tfDiaChi.getText();
+        if(diaChi.isBlank())
+        {
+            FXAlerts.warning("Thiếu địa chỉ");
+            return;
+        }
         String soDT = tfSoDienThoai.getText();
         Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant();
         RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
@@ -185,28 +203,112 @@ public class KhachHangController  extends BaseController implements Initializabl
             return;
         }
         String phai = selectedRadioButton.getText();
-        Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
+        String hoTen = ho + " " + ten;
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có thực sự muốn sửa khách hàng với thông tin:
+                CMND: %s
+                Họ và tên:  %s -> %s
+                Địa chỉ:    %s -> %s
+                Phái:       %s -> %s
+                Ngày cấp:   %s -> %s
+                Số điện thoại: %s -> %s\s""",
+                cmnd,
+                khachHang.getHoTen(),hoTen,
+                khachHang.getDiaChi() ,diaChi,
+                khachHang.getPhai(), phai,
+                khachHang.getNgayCap(),ngay.toString(),
+                khachHang.getSoDT(), soDT));
+        if(!check) return;
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = khachHangRepository.edit(cmnd, ho, ten, diaChi, phai, ngay, soDT);
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    Handle<KhachHang> handle = new Handle<>();
+                    handle.setEntity(khachHang);
+                    handle.setAction("sua");
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
+    }
 
-        String isSuccess = result.get("ISSUCCESS");
-        String msg = result.get("MSG");
-        if(isSuccess.equals("1")) {
-            KhachHang kh = new KhachHang();
-            kh.setId(cmnd);
-            kh.setHo(ho);
-            kh.setTen(ten);
-            kh.setDiaChi(diaChi);
-            kh.setPhai(phai);
-            kh.setNgayCap(ngay);
-            kh.setSoDT(soDT);
-            Handle<KhachHang> handle = new Handle<>();
-            handle.setEntity(kh);
-            handle.setAction("ghi");
-            FXAlerts.info(msg);
+    @Override
+    void btnGhi(ActionEvent actionEvent) {
+        String cmnd = tfCMND.getText();
+        if(cmnd.isBlank())
+        {
+            FXAlerts.warning("Thiếu CMND");
+            return;
         }
-        else {
-            FXAlerts.error(msg);
+        String ho = tfHo.getText();
+        if(ho.isBlank())
+        {
+            FXAlerts.warning("Thiếu họ");
+            return;
         }
-        updateData();
+        String ten = tfTen.getText();
+        if(ten.isBlank())
+        {
+            FXAlerts.warning("Thiếu tên");
+            return;
+        }
+        String diaChi = tfDiaChi.getText();
+        if(diaChi.isBlank())
+        {
+            FXAlerts.warning("Thiếu địa chỉ");
+            return;
+        }
+        String soDT = tfSoDienThoai.getText();
+        Instant ngay = dpNgay.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
+        if(selectedRadioButton == null)
+        {
+            FXAlerts.warning("Chưa chọn giới tính");
+            return;
+        }
+        String phai = selectedRadioButton.getText();
+        String hoTen = ho + " " + ten;
+        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn tạo khách hàng với thông tin:" +
+                "\nCMND: %s" +
+                "\nHọ và tên: %s" +
+                "\nĐịa chỉ: %s" +
+                "\nPhái: %s" +
+                "\nNgày cấp: %s" +
+                "\nSố điện thoại: %s ", cmnd, hoTen, diaChi, phai, ngay.toString(), soDT));
+        if(!check) return;
+        new Thread(()->{
+            Platform.runLater(() -> {
+                Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
+
+                String isSuccess = result.get("ISSUCCESS");
+                String msg = result.get("MSG");
+                if(isSuccess.equals("1")) {
+                    KhachHang kh = new KhachHang();
+                    kh.setId(cmnd);
+                    kh.setHo(ho);
+                    kh.setTen(ten);
+                    kh.setDiaChi(diaChi);
+                    kh.setPhai(phai);
+                    kh.setNgayCap(ngay);
+                    kh.setSoDT(soDT);
+                    Handle<KhachHang> handle = new Handle<>();
+                    handle.setEntity(kh);
+                    handle.setAction("ghi");
+                    FXAlerts.info(msg);
+                }
+                else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+        }).start();
+
     }
 
     @Override
@@ -234,17 +336,13 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void initTableView()
     {
+//        tbKhachHang.getItems().clear();
         list2Table(tc1ChiNhanh, tc1DiaChi, tc1Ho, tc1NgayCap,  tc1Phai, tc1SoDienThoai, tc1Ten, tc1CMND);
+        tbKhachHang.setItems(null);
         tbKhachHang.setItems(obList);
         filtered();
     }
 
-    void addKH(ActionEvent actionEvent)
-    {
-//        RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
-//        String toogleGroupValue = selectedRadioButton.getText();
-
-    }
     static void list2Table(TableColumn<KhachHang, String> tc1ChiNhanh,
                            TableColumn<KhachHang, String> tc1DiaChi,
                            TableColumn<KhachHang, String> tc1Ho,

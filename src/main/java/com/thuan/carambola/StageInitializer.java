@@ -1,6 +1,7 @@
 package com.thuan.carambola;
 
 import com.thuan.carambola.JavaFXApplication.StageReadyEvent;
+import com.thuan.carambola.component.FXAlerts;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -72,6 +73,10 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     }
     public static void setScene(Resource resource) throws IOException {
         if(currentResource == resource) return;
+        if(currentResource != null) {
+            boolean check = FXAlerts.confirm("Đổi sang dịch vụ khác");
+            if (!check) return;
+        }
         FXMLLoader loader = new FXMLLoader(resource.getURL());
         currentResource = resource;
         loader.setControllerFactory(applicationContext::getBean);

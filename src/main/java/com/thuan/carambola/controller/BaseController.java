@@ -85,7 +85,7 @@ public abstract class BaseController implements Initializable {
     @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
     Stack stack;
     PhanManhRepository phanManhRepository;
-
+    Logger log = LoggerFactory.getLogger(TaiKhoanController.class);
     final long reloadTimer = 300000;
 
     abstract void updateData();
@@ -165,7 +165,6 @@ public abstract class BaseController implements Initializable {
         sliderHour.setMax(23);
         sliderMinute.setMax(59);
         dpNgay.setValue(LocalDate.now());
-
         tfHour.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -252,8 +251,6 @@ public abstract class BaseController implements Initializable {
                 }
             }
         });
-        sliderHour.setValue(LocalTime.now().getHour());
-        sliderMinute.setValue(LocalTime.now().getMinute());
 
         dpNgay.valueProperty().addListener((ov, oldValue, newValue) -> {
             if(newValue.isAfter(LocalDate.now()))
@@ -271,6 +268,8 @@ public abstract class BaseController implements Initializable {
                 tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
             }
         });
+        tfHour.setText(String.valueOf(LocalTime.now().getHour()));
+        tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
     }
 
     void valideSoTK(TextField soTK){
