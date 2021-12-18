@@ -50,7 +50,15 @@
             </Menu>
             <Menu fx:id="menuHeThong" mnemonicParsing="false" text="Hệ thống">
                <items>
-                  <MenuItem fx:id="menuItemHeThong" mnemonicParsing="false" text="Tạo tài khoản đăng nhập" />
+                  <MenuItem fx:id="menuItemTaoTKDN" mnemonicParsing="false" text="Tạo tài khoản đăng nhập" />
+                  <MenuItem fx:id="menuItemDangXuat" mnemonicParsing="false" text="Đăng xuất" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuBaoCaoThongKe" mnemonicParsing="false" text="Báo cáo - Thống kê">
+               <items>
+                  <MenuItem fx:id="menuItemReportGD" mnemonicParsing="false" text="Sao kê giao dịch" />
+                  <MenuItem fx:id="menuItemReportKH" mnemonicParsing="false" text="Thống kê khách hàng" />
+                  <MenuItem fx:id="menuItemReportTK" mnemonicParsing="false" text="Thống kê tài khoản" />
                </items>
             </Menu>
             <Menu fx:id="menuGioiThieu" mnemonicParsing="false" text="Giới thiệu">

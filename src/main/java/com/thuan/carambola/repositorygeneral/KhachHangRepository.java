@@ -17,7 +17,9 @@ import java.util.Map;
 public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
     @Query(value = "SELECT * FROM view_remote_KHACHHANG  ", nativeQuery = true)
     List<KhachHang> findRemoteAll();
-//    @Query(value = "EXEC SP_TAO_KHACHHANG :CMND, :HO ,:TEN ,:DIACHI ,:PHAI ,:NGAYCAP ,:SODT, :ERROR", nativeQuery = true)
+
+    @Query(value = "SELECT * FROM V_REPORT_DS_KHACHHANG  ", nativeQuery = true)
+    List<KhachHang> report();
 
     @Transactional
     @Procedure("SP_TAO_KHACHHANG")
@@ -29,6 +31,15 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
                @Param("NGAYCAP") Instant ngayCap,
                @Param("SODT") String soDT);
 
+    @Transactional
+    @Procedure("SP_HOANTAC_XOA_KHACHHANG") // dùng để hoàn tác việc xóa tài khoản không check cmnd đã tồn tại
+    Map<String, String> undelete(@Param("CMND") String cmnd,
+                            @Param("HO") String ho,
+                            @Param("TEN") String ten,
+                            @Param("DIACHI") String diaChi,
+                            @Param("PHAI") String phai,
+                            @Param("NGAYCAP") Instant ngayCap,
+                            @Param("SODT") String soDT);
     @Transactional
     @Procedure("SP_CAPNHAT_THONGTIN_KHACHANG") // Chưa check
     Map<String, String> edit(@Param("CMND") String cmnd,

@@ -9,7 +9,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Table(name = "V_DS_PHANMANH", schema = "dbo", catalog = "NGANHANG")
 public class VDsPhanmanhEntity {

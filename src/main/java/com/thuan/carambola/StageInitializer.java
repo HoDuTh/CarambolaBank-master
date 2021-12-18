@@ -36,6 +36,9 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     public static Resource guiRut;
     public static Resource khachHang;
     public static Resource nhanVien;
+    public static Resource reportGD;
+    public static Resource reportKH;
+    public static Resource reportTK;
 
     public StageInitializer(@Value("${spring.application.ui.title}") String applicationTitle,
                             ApplicationContext applicationContext,
@@ -46,7 +49,10 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
                             @Value("classpath:TaiKhoan.fxml")Resource taiKhoan,
                             @Value("classpath:GuiRut.fxml")Resource guiRut,
                             @Value("classpath:KhachHang.fxml")Resource khachHang,
-                            @Value("classpath:NhanVien.fxml")Resource nhanVien)
+                            @Value("classpath:NhanVien.fxml")Resource nhanVien,
+                            @Value("classpath:ReportGD.fxml")Resource reportGD,
+                            @Value("classpath:ReportKH.fxml")Resource reportKH,
+                            @Value("classpath:ReportTK.fxml")Resource reportTK)
     {
         StageInitializer.applicationTitle = applicationTitle;
         StageInitializer.applicationContext = applicationContext;
@@ -58,15 +64,21 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         StageInitializer.guiRut = guiRut;
         StageInitializer.khachHang = khachHang;
         StageInitializer.nhanVien = nhanVien;
+        StageInitializer.reportGD = reportGD;
+        StageInitializer.reportKH = reportKH;
+        StageInitializer.reportTK = reportTK;
 
     }
     public static void setScene(String name) throws IOException {
         Resource resource = switch (name) {
-            case "chuyenTien" -> chuyenTien;
-            case "taiKhoan" -> taiKhoan;
-            case "guiRut" -> guiRut;
-            case "khachHang" -> khachHang;
-            case "nhanVien" -> nhanVien;
+            case "chuyentien" -> chuyenTien;
+            case "taikhoan" -> taiKhoan;
+            case "guirut" -> guiRut;
+            case "khachhang" -> khachHang;
+            case "nhanvien" -> nhanVien;
+            case "reportgb" -> reportGD;
+            case "reportkh" -> reportKH;
+            case "reporttk" -> reportTK;
             default -> login;
         };
         setScene(resource);

@@ -30,6 +30,17 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
         }),
+        @NamedStoredProcedureQuery(name = "KhachHang.undelete", procedureName = "SP_HOANTAC_XOA_KHACHHANG", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYCAP", type = Instant.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
         @NamedStoredProcedureQuery(name = "KhachHang.edit", procedureName = "SP_CAPNHAT_THONGTIN_KHACHANG", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
@@ -47,8 +58,6 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
         })
 })
-
-
 @Entity
 public class KhachHang {
     @Id
@@ -133,12 +142,6 @@ public class KhachHang {
         return new SimpleStringProperty(this.getHoTen());
     }
     public StringProperty getNgayCapProperty() {
-//        DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
-//        DateTimeFormatter formatter = DateTimeFormatter
-//                .ofPattern(PatternSetting.date)
-//                .withLocale(new Locale("vi", "VN"))
-//                .withZone(ZoneId.of("UTC"));
-//        return new SimpleStringProperty(formatter.format(this.getNgayCap()));
         return new SimpleStringProperty(LocalDate.ofInstant(this.getNgayCap(), ZoneId.systemDefault()).toString());
     }
 

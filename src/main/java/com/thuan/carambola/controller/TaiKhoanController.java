@@ -2,11 +2,10 @@ package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
 import com.thuan.carambola.Service.DateTimeService;
+import com.thuan.carambola.Service.Validation;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
-import com.thuan.carambola.entitygeneral.GDChuyenTien;
 import com.thuan.carambola.entitygeneral.KhachHang;
-import com.thuan.carambola.entitygeneral.NhanVien;
 import com.thuan.carambola.entitygeneral.TaiKhoan;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
@@ -23,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -260,11 +257,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
                         stack.push(handler);
                         return;
                     };
-
                     new Thread(() -> {
-
-
-
                         load();
                         Map<String, String> result = taiKhoanRepository.delete(taiKhoan.getId());
                         showResult(result.get("ISSUCCESS"), result.get("MSG"));
@@ -339,8 +332,8 @@ public class TaiKhoanController extends BaseController implements Initializable 
     @Override
     void initValidation()
     {
-        valideSoTK(tfSoTK);
-        valideCMND(tfCMDN);
+        Validation.valideSoTK(tfSoTK);
+        Validation.valideCMND(tfCMDN);
     }
     @Override
     void initTableEvent()

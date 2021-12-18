@@ -2,13 +2,10 @@ package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
 import com.thuan.carambola.Service.DateTimeService;
+import com.thuan.carambola.Service.Validation;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
-import com.thuan.carambola.entitygeneral.GDChuyenTien;
-import com.thuan.carambola.entitygeneral.GDGoiRut;
 import com.thuan.carambola.entitygeneral.KhachHang;
-import com.thuan.carambola.entitygeneral.TaiKhoan;
-import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
 import com.thuan.carambola.repositorygeneral.KhachHangRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
@@ -22,20 +19,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -432,7 +424,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                 };
                 new Thread(() -> {
                     load();
-                    Map<String, String> result = khachHangRepository.add(
+                    Map<String, String> result = khachHangRepository.undelete(
                             khachHang.getId(),
                             khachHang.getHo(),
                             khachHang.getTen(),
@@ -461,11 +453,11 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void initValidation()
     {
-        valideCMND(tfCMND);
-        valideHo(tfHo);
-        valideTen(tfTen);
-        valideDiaChi(tfDiaChi);
-        valideSoDT(tfSoDienThoai);
+        Validation.valideCMND(tfCMND);
+        Validation.valideHo(tfHo);
+        Validation.valideTen(tfTen);
+        Validation.valideDiaChi(tfDiaChi);
+        Validation.valideSoDT(tfSoDienThoai);
     }
     @Override
     void initTableView()

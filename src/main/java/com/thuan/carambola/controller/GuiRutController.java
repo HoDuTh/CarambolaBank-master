@@ -1,15 +1,12 @@
 package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
+import com.thuan.carambola.Service.Validation;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
-import com.thuan.carambola.entitygeneral.GDChuyenTien;
 import com.thuan.carambola.entitygeneral.GDGoiRut;
-import com.thuan.carambola.entitygeneral.NhanVien;
 import com.thuan.carambola.entitygeneral.TaiKhoan;
-import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.recovery.Handle;
-import com.thuan.carambola.repositorygeneral.ChuyenTienRepository;
 import com.thuan.carambola.repositorygeneral.GuiRutRepository;
 import com.thuan.carambola.repositorygeneral.TaiKhoanRepository;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
@@ -25,15 +22,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.time.Instant;
@@ -92,9 +86,7 @@ public class GuiRutController extends BaseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTimePicker();
         super.initialize(location, resources);
-
     }
    @Scheduled(fixedRate = reloadTimer)
     public void scheduleTaskWithFixedRate() {
@@ -181,25 +173,23 @@ public class GuiRutController extends BaseController implements Initializable {
         String finalLoaiGD = loaiGD;
         boolean check = FXAlerts.confirm(String.format("""
                 Bạn có chắc chắn muốn thực hiện %s\040
-                Với tài khoản:   %s\040
-                Với số tiền là:  %s""", selectedRadioButton.getText(), soTK,  formatCurrency(soTien)));
+                Với tài khoản:              %s\040
+                Với số tiền là:             %s
+                Ngày thực hiện giao dịch:   %s""", selectedRadioButton.getText(), soTK,  formatCurrency(soTien), ngayGD.toString()));
         if(!check) return;
         new Thread(()->{
             load();
             Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, ngayGD, finalLoaiGD, maNV );
-            String msg = result.get("MSG");
-            String isSuccess = result.get("ISSUCCESS");
-            showResult(isSuccess, msg);
+            showResult(result.get("MSG"), result.get("ISSUCCESS"));
             updateData();
             unload();
         }).start();
-
     }
     @Override
     void initValidation()
     {
-        valideSoTK(tfSoTK);
-        valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDGuiRut);
+        Validation.valideSoTK(tfSoTK);
+        Validation.valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDGuiRut);
         formatSoTienToLabel(tfSoTien, lableSoTienFormated);
     }
     @Override

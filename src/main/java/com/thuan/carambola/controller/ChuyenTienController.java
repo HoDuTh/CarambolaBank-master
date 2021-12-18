@@ -1,6 +1,7 @@
 package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
+import com.thuan.carambola.Service.Validation;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.DateAndTimePicker;
 import com.thuan.carambola.component.FXAlerts;
@@ -143,7 +144,6 @@ public class ChuyenTienController extends BaseController implements Initializabl
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTimePicker();
         super.initialize(location, resources);
     }
     @Scheduled(fixedRate = reloadTimer)
@@ -161,7 +161,6 @@ public class ChuyenTienController extends BaseController implements Initializabl
         tfSoTKChuyen.setText("");
         tfSoTien.setText("");
         tfSoTKNhan.setText("");
-        clearDateTime();
     }
     @Override //Không làm gì hết
     void btnXoa(ActionEvent actionEvent) {
@@ -202,9 +201,10 @@ public class ChuyenTienController extends BaseController implements Initializabl
         }
         boolean check = FXAlerts.confirm(String.format("""
                 Bạn có chắc chắn muốn thực hiện chuyển tiền\040
-                Từ tài khoản:   %s\040
-                Đến tài khoản:  %s
-                Với số tiền là:  %s""",soTKChuyen, soTKNhan, formatCurrency(soTien)));
+                Từ tài khoản:               %s\040
+                Đến tài khoản:              %s
+                Với số tiền là:             %s
+                Ngày thực hiện giao dịch:   %s""",soTKChuyen, soTKNhan, formatCurrency(soTien),ngayGD.toString()));
         if(!check) return;
         BigInteger finalSoTien = soTien; // Do cái java nó yêu cầu chứ em không có muốn làm như vậy đâu
         new Thread(()->{
@@ -232,9 +232,9 @@ public class ChuyenTienController extends BaseController implements Initializabl
     @Override
     void initValidation()
     {
-        valideSoTK(tfSoTKChuyen);
-        valideSoTK(tfSoTKNhan);
-        valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDChuyenTien);
+        Validation.valideSoTK(tfSoTKChuyen);
+        Validation.valideSoTK(tfSoTKNhan);
+        Validation.valideSoTien(tfSoTien, ValidationValue.maxGD,  ValidationValue.minGDChuyenTien);
         formatSoTienToLabel(tfSoTien, lableSoTienFormated);
     }
     @Override

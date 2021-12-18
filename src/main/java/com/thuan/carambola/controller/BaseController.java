@@ -34,30 +34,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public abstract class BaseController implements Initializable {
+public abstract class BaseController extends MenuController implements Initializable {
 
     @FXML FlowPane pnInput;
     @FXML FlowPane pnCN;
     @FXML FlowPane pnSSS;
-
-    //-------------------Menu-------------------
-    @FXML MenuBar menu;
-    @FXML Menu menuGiaoDich;
-    @FXML Menu menuGioiThieu;
-    @FXML Menu menuHeThong;
-    @FXML Menu menuHuongDan;
-    @FXML Menu menuKhachHang;
-    @FXML Menu menuNhanVien;
-    @FXML Menu menuTaiKhoan;
-    @FXML MenuItem menuItemChuyenNhanVien;
-    @FXML MenuItem menuItemChuyenTien;
-    @FXML MenuItem menuItemGiaoDich;
-    @FXML MenuItem menuItemGuiRut;
-    @FXML MenuItem menuItemHeThong;
-    @FXML MenuItem menuItemKhachHang;
-    @FXML MenuItem menuItemTaiKhoan;
-    @FXML MenuItem menuItemNhanVien;
-    //-------------------Menu-------------------
 
     //------------------Button------------------
     @FXML Button btnGhi;
@@ -179,14 +160,7 @@ public abstract class BaseController implements Initializable {
         tfMinute.setText("0");
     }
     Instant getDateTime(){
-        int hours = Integer.parseInt(tfHour.getText());
-        int  minutes = Integer.parseInt(tfMinute.getText());
-
-        return  dpNgay.getValue()
-                .atStartOfDay()
-                .toInstant(ZoneOffset.UTC)
-                .plus(hours, ChronoUnit.HOURS)
-                .plus(minutes, ChronoUnit.MINUTES);
+        return Instant.now();
     }
     void initTimePicker(){
         sliderHour.setMax(23);
@@ -299,108 +273,7 @@ public abstract class BaseController implements Initializable {
         tfMinute.setText(String.valueOf(LocalTime.now().getMinute()));
     }
 
-    void valideSoTK(TextField soTK){
-        valideNumberField(soTK);
-        valideTextFieldLength(soTK, 9);
-    }
-    void valideCMND(TextField soTK){
-        valideNumberField(soTK);
-        valideTextFieldLength(soTK, 10);
-    }
-    void valideHo(TextField ho){
-        valideNameField(ho);
-        valideTextFieldLength(ho, 50);
-    }
-    void valideTen(TextField ten){
-        valideNameField(ten);
-        valideTextFieldLength(ten, 10);
-    }
-    void valideDiaChi(TextField diaChi){
-        valideTextFieldLength(diaChi, 100);
-    }
-    void valideSoDT(TextField soDT){
-        valideNumberField(soDT);
-        valideTextFieldLength(soDT, 15);
-    }
-    void valideNameField(TextField textField)
-    {
-//        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (!newValue.matches("\\sa-zA-Z*")) {
-//                textField.setText(newValue.replaceAll("[^\\sa-zA-Z]", ""));
-//            }
-//        });
-    }
-    void valideMaNV(TextField soTK){
-        valideTextFieldLength(soTK, 10);
-    }
-    void valideNumberField(TextField tfOnlyNumber){
-        tfOnlyNumber.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                  tfOnlyNumber.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-    }
-    void valideCurrencyField(TextField tfOnlyMoney){
-        tfOnlyMoney.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (newValue.matches("\\d*")) {
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
-                    String newValueStr = formatter.format(Double.parseDouble(newValue));
-                    tfOnlyMoney.setText(newValueStr);
-                }
-            }
-        });
-    }
-    void valideSoTien(TextField soTien, BigInteger max,  BigInteger min){
-        valideNumberField(soTien);
-        soTien.focusedProperty().addListener(new ChangeListener<Boolean>() // giá trị nhỏ nhất chỉ báo lỗi khi người dùng thoát ra khỏi textfield
-        {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-            {
-                if (!newPropertyValue)
-                {
-                    if(!soTien.getText().isBlank() && new BigInteger(soTien.getText()).compareTo(min) < 0)
-                    {
-                        soTien.setText(min.toString());
-                        FXAlerts.warning(String.format("Giá trị giao dịch nhỏ nhất là %d.\nĐặt mặc định là giá trị nhỏ nhất %d", min, min));
-                    }
-                }
-            }
-        });
-        soTien.textProperty().addListener(new ChangeListener<String>() // giá trị lớn nhất báo khi người dùng nhập vào
-        {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if(soTien.getText().isBlank()) return;
-                BigInteger soTienValue = new BigInteger(soTien.getText());
-                if(soTienValue.compareTo(max) > 0) {
-                    FXAlerts.warning(String.format("Giá trị giao dịch lớn nhất là %d ", max));
-                    soTien.setText(oldValue);
-                }
-                else  if(soTienValue.compareTo(min) > 0 && soTienValue.compareTo(max) < 0)
-                    soTien.setText(soTienValue.toString());
-            }
-        });
-    }
-    void valideTextFieldLength(TextField textField, int length)
-    {
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-               if(textField.getLength() > length)
-                    textField.setText(oldValue);
-            }
-        });
-    }
+
     void initPhanManh(PhanManhRepository phanManhRepository, ComboBox<VDsPhanmanhEntity> cbChiNhanh){
         List<VDsPhanmanhEntity> list = phanManhRepository.findAll();
         ObservableList<VDsPhanmanhEntity> options =
@@ -424,34 +297,8 @@ public abstract class BaseController implements Initializable {
     public BaseController(PhanManhRepository phanManhRepository) {
         this.phanManhRepository = phanManhRepository;
     }
-    private void setMenuItemChuyenTien(ActionEvent actionEvent)
-    {try {StageInitializer.setScene("chuyenTien");} catch (IOException e)
-    {FXAlerts.error("Trang này đang không hoạt động");}}
 
-    private void setMenuItemTaiKhoan(ActionEvent actionEvent)
-    {try {StageInitializer.setScene(StageInitializer.taiKhoan);} catch (IOException e)
-    {FXAlerts.error("Trang này đang không hoạt động");}}
 
-    private void setMenuItemGuiRut(ActionEvent actionEvent)
-    {try {StageInitializer.setScene(StageInitializer.guiRut);} catch (IOException e)
-    {FXAlerts.error("Trang này đang không hoạt động");}}
-
-    private void setMenuItemNhanVien(ActionEvent actionEvent)
-    {try {StageInitializer.setScene(StageInitializer.nhanVien);} catch (IOException e)
-    {FXAlerts.error("Trang này đang không hoạt động");}}
-
-    private void setMenuItemKhachHang(ActionEvent actionEvent)
-    {try {StageInitializer.setScene(StageInitializer.khachHang);} catch (IOException e)
-    {FXAlerts.error("Trang này đang không hoạt động");}}
-
-    void initMenu()
-    {
-        menuItemChuyenTien.setOnAction(this::setMenuItemChuyenTien);
-        menuItemTaiKhoan.setOnAction(this::setMenuItemTaiKhoan);
-        menuItemGuiRut.setOnAction(this::setMenuItemGuiRut);
-        menuItemNhanVien.setOnAction(this::setMenuItemNhanVien);
-        menuItemKhachHang.setOnAction(this::setMenuItemKhachHang);
-    }
     void initNV() //cài đặt thông tin nhân viên đang sử dụng phần mềm
     {
         lbMaNV.setText(JavaFXApplication.maNV);
