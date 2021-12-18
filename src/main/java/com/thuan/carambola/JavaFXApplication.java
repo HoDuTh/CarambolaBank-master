@@ -23,8 +23,8 @@ public class JavaFXApplication extends Application {
         maNV = "0002";
         tenNV = "NONE";
         nhom = "ChiNhanh";
-        phanManh = "Tân Định";
-        server = "TanDinh";
+        phanManh = "Bến Thành";
+        server = "BenThanh";
     }
     @Override
     public void init() {

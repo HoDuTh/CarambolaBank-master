@@ -185,18 +185,13 @@ public class GuiRutController extends BaseController implements Initializable {
                 Với số tiền là:  %s""", selectedRadioButton.getText(), soTK,  formatCurrency(soTien)));
         if(!check) return;
         new Thread(()->{
-            Platform.runLater(() -> {
-                Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, ngayGD, finalLoaiGD, maNV );
-                String isSuccess = result.get("ISSUCCESS");
-                String msg = result.get("MSG");
-                if(isSuccess.equals("1")) {
-                    FXAlerts.info(msg);
-                }
-                else {
-                    FXAlerts.error(msg);
-                }
-                updateData();
-            });
+            load();
+            Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, ngayGD, finalLoaiGD, maNV );
+            String msg = result.get("MSG");
+            String isSuccess = result.get("ISSUCCESS");
+            showResult(isSuccess, msg);
+            updateData();
+            unload();
         }).start();
 
     }

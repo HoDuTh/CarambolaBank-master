@@ -82,6 +82,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         loader.setControllerFactory(applicationContext::getBean);
         Parent parent = loader.load();
         primaryStage.setScene(new Scene(parent, startWidth, startHeight));
+        primaryStage.setMaximized(true);
         primaryStage.setTitle(applicationTitle);
         primaryStage.show();
     }

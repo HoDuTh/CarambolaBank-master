@@ -130,8 +130,6 @@ public class KhachHangController  extends BaseController implements Initializabl
         }
         Instant ngayCap = khachHang.getNgayCap();
         dpNgay.setValue(DateTimeService.get(ngayCap));
-//        tfHour.setText(String.valueOf(DateTimeService.getHour(ngayCap)));
-//        tfMinute.setText(String.valueOf(DateTimeService.getMinute(ngayCap)));
     }
     @Override
     void updateData()
@@ -152,7 +150,7 @@ public class KhachHangController  extends BaseController implements Initializabl
         tfSoDienThoai.setText("");
         tfTen.setText("");
         dpNgay.getEditor().clear();
-        dpNgay.setValue(null);
+        dpNgay.setValue(LocalDate.now());
     }
     private boolean checkEmtyInput() // kiểm tra người dùng có đang làm việc
     {
@@ -166,15 +164,19 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void btnXoa(ActionEvent actionEvent) {
         KhachHang khachHang = tbKhachHang.getSelectionModel().getSelectedItem();
+        if(khachHang == null){
+            FXAlerts.warning("Bạn chưa chọn khách hàng để xóa");
+            return;
+        }
         boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn xóa khách hàng %s với số CMND là %s",khachHang.getHoTen(), khachHang.getId()));
         if(!check) return;
 
         new Thread(()->{
+            load();
+            Map<String, String> result = khachHangRepository.delete(khachHang.getId());
+            String msg = result.get("MSG");
             Platform.runLater(() -> {
-                Map<String, String> result = khachHangRepository.delete(khachHang.getId());
-                String isSuccess = result.get("ISSUCCESS");
-                String msg = result.get("MSG");
-                if(isSuccess.equals("1")) {
+                if(result.get("ISSUCCESS").equals("1")) {
                     Handle<KhachHang> handle = new Handle<>();
                     handle.setEntity(khachHang);
                     handle.setAction("xoa");
@@ -184,8 +186,10 @@ public class KhachHangController  extends BaseController implements Initializabl
                 else {
                     FXAlerts.error(msg);
                 }
-                updateData();
+
             });
+            updateData();
+            unload();
         }).start();
     }
 
@@ -242,11 +246,11 @@ public class KhachHangController  extends BaseController implements Initializabl
                 khachHang.getSoDT(), soDT));
         if(!check) return;
         new Thread(()->{
+            load();
+            Map<String, String> result = khachHangRepository.edit(cmnd, ho, ten, diaChi, phai, ngay, soDT);
+            String msg = result.get("MSG");
             Platform.runLater(() -> {
-                Map<String, String> result = khachHangRepository.edit(cmnd, ho, ten, diaChi, phai, ngay, soDT);
-                String isSuccess = result.get("ISSUCCESS");
-                String msg = result.get("MSG");
-                if(isSuccess.equals("1")) {
+                if(result.get("ISSUCCESS").equals("1")) {
                     Handle<KhachHang> handle = new Handle<>();
                     handle.setEntity(khachHang);
                     handle.setAction("sua");
@@ -257,6 +261,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                     FXAlerts.error(msg);
                 }
                 updateData();
+                unload();
             });
         }).start();
     }
@@ -307,11 +312,11 @@ public class KhachHangController  extends BaseController implements Initializabl
                 Số điện thoại: %s\s""", cmnd, hoTen, diaChi, phai, ngay.toString(), soDT));
         if(!check) return;
         new Thread(()->{
+            load();
+            Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
+            String msg = result.get("MSG");
             Platform.runLater(() -> {
-                Map<String, String> result = khachHangRepository.add(cmnd, ho, ten, diaChi, phai, ngay, soDT);
-                String isSuccess = result.get("ISSUCCESS");
-                String msg = result.get("MSG");
-                if(isSuccess.equals("1")) {
+                if(result.get("ISSUCCESS").equals("1")) {
                     KhachHang kh = new KhachHang();
                     kh.setId(cmnd);
                     kh.setHo(ho);
@@ -330,6 +335,7 @@ public class KhachHangController  extends BaseController implements Initializabl
                     FXAlerts.error(msg);
                 }
                 updateData();
+                unload();
             });
         }).start();
     }
@@ -337,13 +343,13 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void btnHoanTac(ActionEvent actionEvent) {
         if(stack.isEmpty()) {
-            FXAlerts.info("Không còn tác vụ để hòa tác");
+            FXAlerts.info("Không còn tác vụ để hòan tác");
             return;
         }
-        Handle<KhachHang> handle = stack.pop();
-        KhachHang khachHang = handle.getEntity();
+        Handle<KhachHang> handler = stack.pop();
+        KhachHang khachHang = handler.getEntity();
         boolean check;
-        switch (handle.getAction()) {
+        switch (handler.getAction()) {
             case "ghi" -> {
                 check = FXAlerts.confirm(String.format("""
                                 Bạn có thực sự muốn loại bỏ việc thêm khách hàng với thông tin:
@@ -358,21 +364,20 @@ public class KhachHangController  extends BaseController implements Initializabl
                         khachHang.getDiaChi(),
                         khachHang.getPhai(),
                         khachHang.getNgayCap(),
-                        khachHang.getSoDT())); if (!check) return;
+                        khachHang.getSoDT()));
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                };
                 new Thread(() -> {
-                    Platform.runLater(() -> {
-                        Map<String, String> result = khachHangRepository.delete(khachHang.getId());
-                        String isSuccess = result.get("ISSUCCESS");
-                        String msg = result.get("MSG");
-                        if (isSuccess.equals("1")) {
-                            FXAlerts.info(msg);
-                        } else {
-                            FXAlerts.error(msg);
-                        }
-                        updateData();
-                    });
+                    load();
+                    Map<String, String> result = khachHangRepository.delete(khachHang.getId());
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
                 }).start();
-            } case "sua" -> {
+            }
+            case "sua" -> {
                 check = FXAlerts.confirm(String.format("""
                                 Bạn có thực sự muốn hoàn lại khách hàng với thông tin:
                                 CMND: %s
@@ -386,27 +391,25 @@ public class KhachHangController  extends BaseController implements Initializabl
                         khachHang.getDiaChi(),
                         khachHang.getPhai(),
                         khachHang.getNgayCap(),
-                        khachHang.getSoDT())); if (!check) return;
+                        khachHang.getSoDT()));
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                };
                 new Thread(() -> {
-                    Platform.runLater(() -> {
-                        Map<String, String> result = khachHangRepository.edit(
-                                khachHang.getId(),
-                                khachHang.getHo(),
-                                khachHang.getTen(),
-                                khachHang.getDiaChi(),
-                                khachHang.getPhai(),
-                                khachHang.getNgayCap(),
-                                khachHang.getSoDT()
-                        );
-                        String isSuccess = result.get("ISSUCCESS");
-                        String msg = result.get("MSG");
-                        if (isSuccess.equals("1")) {
-                            FXAlerts.info(msg);
-                        } else {
-                            FXAlerts.error(msg);
-                        }
-                        updateData();
-                    });
+                    load();
+                    Map<String, String> result = khachHangRepository.edit(
+                            khachHang.getId(),
+                            khachHang.getHo(),
+                            khachHang.getTen(),
+                            khachHang.getDiaChi(),
+                            khachHang.getPhai(),
+                            khachHang.getNgayCap(),
+                            khachHang.getSoDT()
+                    );
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
                 }).start();
             } case "xoa" -> {
                 check = FXAlerts.confirm(String.format("""
@@ -423,26 +426,23 @@ public class KhachHangController  extends BaseController implements Initializabl
                         khachHang.getPhai(),
                         khachHang.getNgayCap().toString(),
                         khachHang.getSoDT()));
-                if (!check) return;
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                };
                 new Thread(() -> {
-                    Platform.runLater(() -> {
-                        Map<String, String> result = khachHangRepository.add(
-                                khachHang.getId(),
-                                khachHang.getHo(),
-                                khachHang.getTen(),
-                                khachHang.getDiaChi(),
-                                khachHang.getPhai(),
-                                khachHang.getNgayCap(),
-                                khachHang.getSoDT());
-                        String isSuccess = result.get("ISSUCCESS");
-                        String msg = result.get("MSG");
-                        if (isSuccess.equals("1")) {
-                            FXAlerts.info(msg);
-                        } else {
-                            FXAlerts.error(msg);
-                        }
-                        updateData();
-                    });
+                    load();
+                    Map<String, String> result = khachHangRepository.add(
+                            khachHang.getId(),
+                            khachHang.getHo(),
+                            khachHang.getTen(),
+                            khachHang.getDiaChi(),
+                            khachHang.getPhai(),
+                            khachHang.getNgayCap(),
+                            khachHang.getSoDT());
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
                 }).start();
             } default -> {
                 FXAlerts.info("Tác vụ đã lưu không phù hợp");
@@ -470,7 +470,6 @@ public class KhachHangController  extends BaseController implements Initializabl
     @Override
     void initTableView()
     {
-//        tbKhachHang.getItems().clear();
         list2Table(tc1ChiNhanh, tc1DiaChi, tc1Ho, tc1NgayCap,  tc1Phai, tc1SoDienThoai, tc1Ten, tc1CMND);
         tbKhachHang.setItems(null);
         tbKhachHang.setItems(obList);

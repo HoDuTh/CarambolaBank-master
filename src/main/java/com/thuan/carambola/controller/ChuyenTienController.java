@@ -158,7 +158,6 @@ public class ChuyenTienController extends BaseController implements Initializabl
     void btnThem(ActionEvent actionEvent) {
         boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn tạo phiên làm việc mới");
         if(!check) return;
-
         tfSoTKChuyen.setText("");
         tfSoTien.setText("");
         tfSoTKNhan.setText("");
@@ -184,6 +183,10 @@ public class ChuyenTienController extends BaseController implements Initializabl
             FXAlerts.warning("Chưa nhập số tài khoản nhận");
             return;
         }
+        if(soTKNhan.equals(soTKChuyen)){
+            FXAlerts.warning("Số tài khoản chuyển và nhận trùng nhau. \nNếu muốn gửi tiền vui lòng chọn dịch vụ gửi tiền");
+            return;
+        }
         if(tfSoTien.getText().isBlank()) {
             FXAlerts.warning("Chưa nhập số tiền cần chuyển");
             return;
@@ -203,24 +206,14 @@ public class ChuyenTienController extends BaseController implements Initializabl
                 Đến tài khoản:  %s
                 Với số tiền là:  %s""",soTKChuyen, soTKNhan, formatCurrency(soTien)));
         if(!check) return;
-
         BigInteger finalSoTien = soTien; // Do cái java nó yêu cầu chứ em không có muốn làm như vậy đâu
         new Thread(()->{
-            Platform.runLater(() -> {
-                Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, finalSoTien, ngayGD, maNV );
-                String msg = result.get("MSG");
-                String isSuccess = result.get("ISSUCCESS");
-                if(isSuccess.equals("1")) {
-                    FXAlerts.info(msg);
-                }
-                else {
-                    FXAlerts.error(msg);
-                }
-                updateData();
-            });
+            load();
+            Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, finalSoTien, ngayGD, maNV );
+            showResult(result.get("ISSUCCESS"), result.get("MSG"));
+            updateData();
+            unload();
         }).start();
-
-
     }
 
     @Override

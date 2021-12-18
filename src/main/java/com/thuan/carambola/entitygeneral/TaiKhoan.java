@@ -76,7 +76,15 @@ public class TaiKhoan {
         this.hoTenNV = "";
         this.maCN = "";
     }
-
+    public TaiKhoan(String sotk, String cmnd, Instant ngay) {
+        this.id = sotk;
+        this.cmnd = cmnd;
+        this.ngayMoTK = ngay;
+        this.hoTen = "";
+        this.soDT = "";
+        this.hoTenNV = "";
+        this.maCN = "";
+    }
     public String getSoDu() {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);

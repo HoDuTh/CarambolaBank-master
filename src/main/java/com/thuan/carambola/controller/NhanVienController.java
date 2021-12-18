@@ -174,7 +174,6 @@ public class NhanVienController extends BaseController implements Initializable 
     }
     @Override
     void unFiltered() {
-//        tbNhanVien.getSelectionModel().clearSelection();
         tbNhanVien.setItems(obList);
     }
     @Override

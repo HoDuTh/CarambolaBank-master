@@ -6,8 +6,7 @@ import com.thuan.carambola.Service.DateTimeService;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,9 +19,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -33,6 +29,9 @@ import java.text.NumberFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public abstract class BaseController implements Initializable {
@@ -42,6 +41,7 @@ public abstract class BaseController implements Initializable {
     @FXML FlowPane pnSSS;
 
     //-------------------Menu-------------------
+    @FXML MenuBar menu;
     @FXML Menu menuGiaoDich;
     @FXML Menu menuGioiThieu;
     @FXML Menu menuHeThong;
@@ -72,6 +72,7 @@ public abstract class BaseController implements Initializable {
     @FXML Label lbMaNV;
     @FXML Label lbNhom;
     @FXML Label lbTenNV;
+    @FXML Label lbLoading;
     //---------------LabelNhanVien--------------
 
     @FXML DatePicker dpNgay;
@@ -81,7 +82,7 @@ public abstract class BaseController implements Initializable {
 
     @FXML TextField tfHour;
     @FXML TextField tfMinute;
-
+    @FXML ToolBar tbButton;
     @FXML ComboBox<VDsPhanmanhEntity> cbChiNhanh;
 
     PhanManhRepository phanManhRepository;
@@ -118,7 +119,33 @@ public abstract class BaseController implements Initializable {
         } // Chỉ có quyền chi nhánh mới khởi tạo các event table
         initValidation();
     }
-
+    void load()
+    {
+        Platform.runLater(() -> {
+            menu.setDisable(true);
+            tbButton.setDisable(true);
+            lbLoading.setText("Loading...");
+        });
+    }
+    void showResult(String isSuccess, String msg)
+    {
+        Platform.runLater(() -> {
+            if(isSuccess.equals("1")) {
+                FXAlerts.info(msg);
+            }
+            else {
+                FXAlerts.error(msg);
+            }
+        });
+    }
+    void unload()
+    {
+        Platform.runLater(() -> {
+            menu.setDisable(false);
+            tbButton.setDisable(false);
+            lbLoading.setText("");
+        });
+    }
     String formatCurrency(BigInteger soTien)
     {
         Locale localeVN = new Locale("vi", "VN");
