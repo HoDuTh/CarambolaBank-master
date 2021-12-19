@@ -2,7 +2,9 @@ package com.thuan.carambola.entitygeneral;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -17,32 +19,32 @@ import java.util.UUID;
         @Index(name = "MSmerge_index_62623266", columnList = "rowguid", unique = true)
 })
 @NamedStoredProcedureQueries({
-    @NamedStoredProcedureQuery(name = "NhanVien.add", procedureName = "SP_TAO_NHANVIEN", parameters = {
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "TRANGTHAIXOA", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    }),
-    @NamedStoredProcedureQuery(name = "NhanVien.edit", procedureName = "SP_CAPNHAT_THONGTIN_NHANVIEN", parameters = {
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    }),
-    @NamedStoredProcedureQuery(name = "NhanVien.delete", procedureName = "SP_XOA_NHANVIEN", parameters = {
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    })// ISERROR = 1 là lỗi, 2 là đánh dấu xóa, 0 là xóa thành công
+        @NamedStoredProcedureQuery(name = "NhanVien.add", procedureName = "SP_TAO_NHANVIEN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "TRANGTHAIXOA", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
+        @NamedStoredProcedureQuery(name = "NhanVien.edit", procedureName = "SP_CAPNHAT_THONGTIN_NHANVIEN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "DIACHI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "PHAI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SODT", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
+        @NamedStoredProcedureQuery(name = "NhanVien.delete", procedureName = "SP_XOA_NHANVIEN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        })// ISERROR = 1 là lỗi, 2 là đánh dấu xóa, 0 là xóa thành công
 })
 @Cacheable(false)
 public class NhanVien {
@@ -85,29 +87,37 @@ public class NhanVien {
     }
 
     public String getTrangThaiXoa() {
-        return trangThaiXoa == 0? "Hoạt Động" : "Đã nghỉ";
+        return trangThaiXoa == 0 ? "Hoạt Động" : "Đã nghỉ";
     }
+
     public String getHoTen() {
-        return (this.getHo() + " " + this.getTen()).replaceAll("\\s\\s+", " ").trim() ;
+        return (this.getHo() + " " + this.getTen()).replaceAll("\\s\\s+", " ").trim();
     }
+
     public StringProperty getMaNVProperty() {
         return new SimpleStringProperty(this.getId());
     }
+
     public StringProperty getHoProperty() {
         return new SimpleStringProperty(this.getHo());
     }
+
     public StringProperty getTenProperty() {
         return new SimpleStringProperty(this.getTen());
     }
+
     public StringProperty getDiaChiProperty() {
         return new SimpleStringProperty(this.getDiaChi());
     }
+
     public StringProperty getPhaiProperty() {
         return new SimpleStringProperty(this.getPhai());
     }
+
     public StringProperty getSoDTProperty() {
         return new SimpleStringProperty(this.getSoDT());
     }
+
     public StringProperty getTTXProperty() {
         return new SimpleStringProperty(String.valueOf(this.getTrangThaiXoa()));
     }

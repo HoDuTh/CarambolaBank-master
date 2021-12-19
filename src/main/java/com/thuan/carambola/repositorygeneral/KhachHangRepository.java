@@ -1,6 +1,5 @@
 package com.thuan.carambola.repositorygeneral;
 
-import com.thuan.carambola.entitygeneral.GDChuyenTien;
 import com.thuan.carambola.entitygeneral.KhachHang;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,24 +23,27 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
     @Transactional
     @Procedure("SP_TAO_KHACHHANG")
     Map<String, String> add(@Param("CMND") String cmnd,
-               @Param("HO") String ho,
-               @Param("TEN") String ten,
-               @Param("DIACHI") String diaChi,
-               @Param("PHAI") String phai,
-               @Param("NGAYCAP") Instant ngayCap,
-               @Param("SODT") String soDT);
-
-    @Transactional
-    @Procedure("SP_HOANTAC_XOA_KHACHHANG") // dùng để hoàn tác việc xóa tài khoản không check cmnd đã tồn tại
-    Map<String, String> undelete(@Param("CMND") String cmnd,
                             @Param("HO") String ho,
                             @Param("TEN") String ten,
                             @Param("DIACHI") String diaChi,
                             @Param("PHAI") String phai,
                             @Param("NGAYCAP") Instant ngayCap,
                             @Param("SODT") String soDT);
+
     @Transactional
-    @Procedure("SP_CAPNHAT_THONGTIN_KHACHANG") // Chưa check
+    @Procedure("SP_HOANTAC_XOA_KHACHHANG")
+        // dùng để hoàn tác việc xóa tài khoản không check cmnd đã tồn tại
+    Map<String, String> undelete(@Param("CMND") String cmnd,
+                                 @Param("HO") String ho,
+                                 @Param("TEN") String ten,
+                                 @Param("DIACHI") String diaChi,
+                                 @Param("PHAI") String phai,
+                                 @Param("NGAYCAP") Instant ngayCap,
+                                 @Param("SODT") String soDT);
+
+    @Transactional
+    @Procedure("SP_CAPNHAT_THONGTIN_KHACHHANG")
+        // Chưa check
     Map<String, String> edit(@Param("CMND") String cmnd,
                              @Param("HO") String ho,
                              @Param("TEN") String ten,
@@ -51,7 +53,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, String> {
                              @Param("SODT") String soDT);
 
     @Transactional
-    @Procedure("SP_XOA_KHACHHANG") // Chưa check
+    @Procedure("SP_XOA_KHACHHANG")
+        // Chưa check
     Map<String, String> delete(@Param("CMND") String cmnd);
 
 }

@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.KhachHangController">
+<VBox fillWidth="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.KhachHangController">
    <children>
       <MenuBar fx:id="menu">
          <menus>
@@ -69,7 +69,7 @@
             <Menu fx:id="menuHuongDan" mnemonicParsing="false" text="Hướng dẫn" />
          </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.2505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.2505567928730512" focusTraversable="true" VBox.vgrow="NEVER">
          <items>
             <AnchorPane fx:id="pInput" prefHeight="747.0" prefWidth="336.0">
                <children>
@@ -303,7 +303,7 @@
             </ScrollPane>
          </items>
       </SplitPane>
-      <FlowPane prefHeight="0.0" prefWidth="1920.0">
+      <FlowPane prefHeight="0.0" prefWidth="1920.0" VBox.vgrow="NEVER">
          <children>
             <FlowPane prefHeight="18.0" prefWidth="328.0">
                <children>

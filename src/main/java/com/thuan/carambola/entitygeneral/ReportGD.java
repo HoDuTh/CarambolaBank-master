@@ -12,13 +12,13 @@ import java.time.Instant;
         })
 })
 public class ReportGD {
-        @Id
-        @Column(name = "NGAYGD", nullable = false)
-        private Instant id;
+    @Id
+    @Column(name = "NGAYGD", nullable = false)
+    private Instant id;
 
-        @Column(name = "SOTIEN", nullable = false)
-        private BigInteger from;
+    @Column(name = "SOTIEN", nullable = false)
+    private BigInteger from;
 
-        @Column(name = "LOAIGD", nullable = false)
-        private String to;
+    @Column(name = "LOAIGD", nullable = false)
+    private String to;
 }

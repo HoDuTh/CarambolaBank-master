@@ -1,7 +1,6 @@
 package com.thuan.carambola.entitygeneral;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.time.Instant;
 
 @Entity
@@ -12,16 +11,16 @@ import java.time.Instant;
         })
 })
 public class ReportTK {
-        @Id
-        @Column(name = "SOTK", nullable = false)
-        private String soTK;
+    @Id
+    @Column(name = "SOTK", nullable = false)
+    private String soTK;
 
-        @Column(name = "CMND", nullable = false)
-        private String cmnd;
+    @Column(name = "CMND", nullable = false)
+    private String cmnd;
 
-        @Column(name = "NGAYMOTK", nullable = false)
-        private Instant ngayMoTK;
+    @Column(name = "NGAYMOTK", nullable = false)
+    private Instant ngayMoTK;
 
-        @Column(name = "MACN", nullable = false)
-        private String maCN;
+    @Column(name = "MACN", nullable = false)
+    private String maCN;
 }

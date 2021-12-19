@@ -1,6 +1,5 @@
 package com.thuan.carambola.repositorygeneral;
 
-import com.thuan.carambola.entitygeneral.KhachHang;
 import com.thuan.carambola.entitygeneral.NhanVien;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,15 +27,17 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, String> {
                             @Param("TRANGTHAIXOA") String ttx);
 
     @Transactional
-    @Procedure("SP_CAPNHAT_THONGTIN_NHANVIEN") // Chưa check
+    @Procedure("SP_CAPNHAT_THONGTIN_NHANVIEN")
+        // Chưa check
     Map<String, String> edit(@Param("MANV") String maNV,
-               @Param("HO") String ho,
-               @Param("TEN") String ten,
-               @Param("DIACHI") String diaChi,
-               @Param("PHAI") String phai,
-               @Param("SODT") String soDT);
+                             @Param("HO") String ho,
+                             @Param("TEN") String ten,
+                             @Param("DIACHI") String diaChi,
+                             @Param("PHAI") String phai,
+                             @Param("SODT") String soDT);
 
     @Transactional
-    @Procedure("SP_XOA_NHANVIEN") // Chưa check
+    @Procedure("SP_XOA_NHANVIEN")
+        // Chưa check
     Map<String, String> delete(@Param("MANV") String maNV);
 }

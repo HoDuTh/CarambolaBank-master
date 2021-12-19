@@ -1,6 +1,5 @@
 package com.thuan.carambola;
 
-import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -26,6 +25,7 @@ public class JavaFXApplication extends Application {
         phanManh = "Bến Thành";
         server = "BenThanh";
     }
+
     @Override
     public void init() {
         ApplicationContextInitializer<GenericApplicationContext> initializer =
@@ -53,6 +53,7 @@ public class JavaFXApplication extends Application {
         public StageReadyEvent(Stage primaryStage) {
             super(primaryStage);
         }
+
         public Stage getStage() {
             return (Stage) getSource();
         }

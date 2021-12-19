@@ -71,10 +71,14 @@ public class GDGoiRut {
         return new SimpleStringProperty(loaiGD);
     }
 
-    public StringProperty getSotienProperty() {return new SimpleStringProperty(this.getSoTien());}
+    public StringProperty getSotienProperty() {
+        return new SimpleStringProperty(this.getSoTien());
+    }
+
     public StringProperty getMaGDProperty() {
         return new SimpleStringProperty(String.valueOf(this.getId()));
     }
+
     public StringProperty getNgayGDProperty() {
         DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern(PatternSetting.date)
@@ -82,6 +86,7 @@ public class GDGoiRut {
                 .withZone(ZoneId.of("UTC"));
         return new SimpleStringProperty(formatter.format(this.getNgayGD()));
     }
+
     public String getSoTien() {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);

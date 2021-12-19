@@ -20,25 +20,25 @@ import java.util.UUID;
         @Index(name = "MSmerge_index_1333579789", columnList = "rowguid", unique = true)
 })
 @NamedStoredProcedureQueries({
-    @NamedStoredProcedureQuery(name = "TaiKhoan.add", procedureName = "SP_TAO_TAIKHOAN", parameters = {
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    }),
-    @NamedStoredProcedureQuery(name = "TaiKhoan.edit", procedureName = "SP_CAPNHAT_THONGTIN_TAIKHOAN", parameters = {
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
-        @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-        @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    }),
-    @NamedStoredProcedureQuery(name = "TaiKhoan.delete", procedureName = "SP_XOA_TAIKHOAN", parameters = {
-            @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
-            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
-    })
+        @NamedStoredProcedureQuery(name = "TaiKhoan.add", procedureName = "SP_TAO_TAIKHOAN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
+        @NamedStoredProcedureQuery(name = "TaiKhoan.edit", procedureName = "SP_CAPNHAT_THONGTIN_TAIKHOAN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYMOTK", type = Instant.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
+        @NamedStoredProcedureQuery(name = "TaiKhoan.delete", procedureName = "SP_XOA_TAIKHOAN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        })
 })
 @Entity
 public class TaiKhoan {
@@ -76,6 +76,7 @@ public class TaiKhoan {
         this.hoTenNV = "";
         this.maCN = "";
     }
+
     public TaiKhoan(String sotk, String cmnd, Instant ngay) {
         this.id = sotk;
         this.cmnd = cmnd;
@@ -85,11 +86,13 @@ public class TaiKhoan {
         this.hoTenNV = "";
         this.maCN = "";
     }
+
     public String getSoDu() {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         return currencyVN.format(sodu);
     }
+
     public StringProperty getNgayMoTKProperty() {
         DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern(PatternSetting.date)
@@ -97,10 +100,12 @@ public class TaiKhoan {
                 .withZone(ZoneId.of("UTC"));
         return new SimpleStringProperty(formatter.format(this.getNgayMoTK()));
     }
+
     public StringProperty getSoduProperty() {
 
         return new SimpleStringProperty(this.getSoDu());
     }
+
     public StringProperty getSoTKProperty() {
         return new SimpleStringProperty(this.getId());
     }

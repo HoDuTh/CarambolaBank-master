@@ -1,9 +1,9 @@
 package com.thuan.carambola.entitygeneral;
 
 import lombok.Data;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Data
 @Entity

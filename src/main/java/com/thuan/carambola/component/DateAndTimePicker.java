@@ -2,7 +2,6 @@ package com.thuan.carambola.component;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -79,12 +78,12 @@ public class DateAndTimePicker extends DatePicker {
         return format.get();
     }
 
-    public ObjectProperty<String> formatProperty() {
-        return format;
-    }
-
     public void setFormat(String format) {
         this.format.set(format);
+    }
+
+    public ObjectProperty<String> formatProperty() {
+        return format;
     }
 
     class InternalConverter extends StringConverter<LocalDate> {

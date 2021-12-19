@@ -13,7 +13,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -31,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "generalEntityManagerFactory",
         transactionManagerRef = "generalTransactionManager",
-  basePackages = { "com.thuan.carambola.repositorygeneral" }
+        basePackages = {"com.thuan.carambola.repositorygeneral"}
 )
 public class MultiTenantManager {
 
@@ -43,10 +42,7 @@ public class MultiTenantManager {
     public MultiTenantManager(DataSourceProperties properties) {
         this.properties = properties;
     }
-//    @Bean
-//    public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
-//        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
-//    }
+
     @Bean("generalDataSource")
     public DataSource dataSource() {
         multiTenantDataSource = new AbstractRoutingDataSource() {
@@ -60,36 +56,38 @@ public class MultiTenantManager {
         multiTenantDataSource.afterPropertiesSet();
         return multiTenantDataSource;
     }
-    @Bean(name = "generalEntityManagerFactory")
-	@Scope("prototype")
-	public LocalContainerEntityManagerFactoryBean generalEntityManagerFactory(
-			EntityManagerFactoryBuilder builder,
-			@Qualifier("generalDataSource") DataSource generalDataSource) throws SQLException {
-		Map<String, String> jpaProperties = new HashMap<>();
-		jpaProperties.put("hibernate.ddl-auto", "none");
-		jpaProperties.put("hibernate.current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
-		jpaProperties.put("show-sql", "true");
-		jpaProperties.put("spring.jpa.properties.hibernate.dialect",
-				"org.hibernate.dialect.SQLServer2012Dialect");
-		return builder
-				.dataSource(generalDataSource)
-				.packages("com.thuan.carambola.entitygeneral")
-				.persistenceUnit("general")
-				.properties(jpaProperties)
-				.build();
-	}
 
-	@Bean(name = "generalTransactionManager")
-	@Scope("prototype")
-	public PlatformTransactionManager generalTransactionManager(
-			@Qualifier("generalEntityManagerFactory") EntityManagerFactory generalEntityManagerFactory) throws SQLException {
-		return new JpaTransactionManager(generalEntityManagerFactory);
-	}
-    public void removeTenant(String tenantId)
-    {
-        if(tenantDataSources.isEmpty()||!tenantDataSources.containsKey(tenantId)) return;
+    @Bean(name = "generalEntityManagerFactory")
+    @Scope("prototype")
+    public LocalContainerEntityManagerFactoryBean generalEntityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("generalDataSource") DataSource generalDataSource) throws SQLException {
+        Map<String, String> jpaProperties = new HashMap<>();
+        jpaProperties.put("hibernate.ddl-auto", "none");
+        jpaProperties.put("hibernate.current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
+        jpaProperties.put("show-sql", "true");
+        jpaProperties.put("spring.jpa.properties.hibernate.dialect",
+                "org.hibernate.dialect.SQLServer2012Dialect");
+        return builder
+                .dataSource(generalDataSource)
+                .packages("com.thuan.carambola.entitygeneral")
+                .persistenceUnit("general")
+                .properties(jpaProperties)
+                .build();
+    }
+
+    @Bean(name = "generalTransactionManager")
+    @Scope("prototype")
+    public PlatformTransactionManager generalTransactionManager(
+            @Qualifier("generalEntityManagerFactory") EntityManagerFactory generalEntityManagerFactory) throws SQLException {
+        return new JpaTransactionManager(generalEntityManagerFactory);
+    }
+
+    public void removeTenant(String tenantId) {
+        if (tenantDataSources.isEmpty() || !tenantDataSources.containsKey(tenantId)) return;
         tenantDataSources.remove(tenantId);
     }
+
     public void addTenant(String tenantId, String url, String username, String password) throws SQLException {
 
         DataSource dataSource = DataSourceBuilder.create()
@@ -100,7 +98,7 @@ public class MultiTenantManager {
                 .build();
 
         // Check that new connection is 'live'. If not - throw exception
-        try(Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             tenantDataSources.put(tenantId, dataSource);
             multiTenantDataSource.afterPropertiesSet();
         }

@@ -18,5 +18,7 @@ public class CarambolaApplication {
         this.tenantManager = tenantManager;
     }
 
-    public static void main(String[] args) {Application.launch(JavaFXApplication.class, args);}
+    public static void main(String[] args) {
+        Application.launch(JavaFXApplication.class, args);
+    }
 }

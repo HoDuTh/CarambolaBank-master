@@ -69,12 +69,15 @@ public class GDChuyenTien {
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         return currencyVN.format(soTien);
     }
+
     public StringProperty getSotienProperty() {
         return new SimpleStringProperty(this.getSoTien());
     }
+
     public StringProperty getMaGDProperty() {
         return new SimpleStringProperty(String.valueOf(this.getId()));
     }
+
     public StringProperty getNgayGDProperty() {
         DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern(PatternSetting.date)

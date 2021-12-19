@@ -2,7 +2,9 @@ package com.thuan.carambola.entitygeneral;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -41,7 +43,7 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
         }),
-        @NamedStoredProcedureQuery(name = "KhachHang.edit", procedureName = "SP_CAPNHAT_THONGTIN_KHACHANG", parameters = {
+        @NamedStoredProcedureQuery(name = "KhachHang.edit", procedureName = "SP_CAPNHAT_THONGTIN_KHACHHANG", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "CMND", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "HO", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "TEN", type = String.class),
@@ -117,30 +119,41 @@ public class KhachHang {
     }
 
     public String getHoTen() {
-        return (this.getHo() + " " + this.getTen()).replaceAll("\\s\\s+", " ").trim() ;
+        return (this.getHo() + " " + this.getTen()).replaceAll("\\s\\s+", " ").trim();
     }
-    public StringProperty getCMNDProperty() {return new SimpleStringProperty(this.getId());}
+
+    public StringProperty getCMNDProperty() {
+        return new SimpleStringProperty(this.getId());
+    }
+
     public StringProperty getHoProperty() {
         return new SimpleStringProperty(this.getHo());
     }
+
     public StringProperty getMaCNProperty() {
         return new SimpleStringProperty(this.getMaCN());
     }
+
     public StringProperty getTenProperty() {
         return new SimpleStringProperty(this.getTen());
     }
+
     public StringProperty getDiaChiProperty() {
         return new SimpleStringProperty(this.getDiaChi());
     }
+
     public StringProperty getPhaiProperty() {
         return new SimpleStringProperty(this.getPhai());
     }
+
     public StringProperty getSoDTProperty() {
         return new SimpleStringProperty(this.getSoDT());
     }
+
     public StringProperty getHoTenProperty() {
         return new SimpleStringProperty(this.getHoTen());
     }
+
     public StringProperty getNgayCapProperty() {
         return new SimpleStringProperty(LocalDate.ofInstant(this.getNgayCap(), ZoneId.systemDefault()).toString());
     }

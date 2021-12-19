@@ -20,10 +20,10 @@ public interface ChuyenTienRepository extends JpaRepository<GDChuyenTien, String
 
     /**
      * @param soTKChuyenTien (String) số tài khoản để gửi tiền
-     * @param soTKNhanTien (String) số tài khoản để nhận tiền
-     * @param soTien (BigInteger) số tiền chuyển khoản
-     * @param ngayGD (Instant) ngày thực hiện giao dịch
-     * @param maNV (String) mã nhân viên thực hiện giao dịch
+     * @param soTKNhanTien   (String) số tài khoản để nhận tiền
+     * @param soTien         (BigInteger) số tiền chuyển khoản
+     * @param ngayGD         (Instant) ngày thực hiện giao dịch
+     * @param maNV           (String) mã nhân viên thực hiện giao dịch
      **/
     @Transactional
     @Procedure("SP_ChuyenTien")

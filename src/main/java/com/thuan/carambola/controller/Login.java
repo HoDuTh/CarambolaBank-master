@@ -34,47 +34,53 @@ public class Login implements Initializable {
     PhanManhRepository phanManhRepository;
     ThongTinDangNhapRepository thongTinDangNhapRepository;
     Logger log = LoggerFactory.getLogger(Login.class);
-
-    @FXML private Button btnExit;
-    @FXML private Button btnLogin;
-    @FXML private ComboBox<VDsPhanmanhEntity> cbChiNhanh;
-    @FXML private Label lbError;
-    @FXML private PasswordField tfPassword;
-    @FXML private TextField tfUsername;
+    @Value("${server1.port}")
+    String portServer1;
+    @Value("${server2.port}")
+    String portServer2;
+    @FXML
+    private Button btnExit;
+    @FXML
+    private Button btnLogin;
+    @FXML
+    private ComboBox<VDsPhanmanhEntity> cbChiNhanh;
+    @FXML
+    private Label lbError;
+    @FXML
+    private PasswordField tfPassword;
+    @FXML
+    private TextField tfUsername;
 
     @Autowired
     public Login(PhanManhRepository phanManhRepository,
-                 ThongTinDangNhapRepository thongTinDangNhapRepository)
-    {
+                 ThongTinDangNhapRepository thongTinDangNhapRepository) {
         this.thongTinDangNhapRepository = thongTinDangNhapRepository;
         this.phanManhRepository = phanManhRepository;
     }
-    static void initPhanManh(PhanManhRepository phanManhRepository, ComboBox<VDsPhanmanhEntity> cbChiNhanh)
-    {
+
+    static void initPhanManh(PhanManhRepository phanManhRepository, ComboBox<VDsPhanmanhEntity> cbChiNhanh) {
         List<VDsPhanmanhEntity> list = phanManhRepository.findAll();
         ObservableList<VDsPhanmanhEntity> options =
                 FXCollections.observableArrayList(list);
         cbChiNhanh.setItems(options);
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initPhanManh(phanManhRepository, cbChiNhanh);
         btnLogin.setOnAction(this::buttonLogin);
         btnExit.setOnAction(this::btnExit);
     }
-    @Value("${server1.port}")
-    String portServer1;
-    @Value("${server2.port}")
-    String portServer2;
-    void btnExit(ActionEvent actionEvent)
-    {
+
+    void btnExit(ActionEvent actionEvent) {
         JavaFXApplication.applicationContext.close();
         Platform.exit();
     }
-    @FXML @Transactional(readOnly = true)
-    void buttonLogin(ActionEvent actionEvent)  {
-        if(cbChiNhanh.getSelectionModel().isEmpty())
-        {
+
+    @FXML
+    @Transactional(readOnly = true)
+    void buttonLogin(ActionEvent actionEvent) {
+        if (cbChiNhanh.getSelectionModel().isEmpty()) {
             FXAlerts.warning("Vui lòng chọn chi nhánh");
             return;
         }
@@ -82,12 +88,10 @@ public class Login implements Initializable {
         String phanmanh = cbChiNhanh.getSelectionModel().getSelectedItem().getTencn();
         String username = tfUsername.getText();
         String password = tfPassword.getText();
-        if(username.isEmpty()||username.isBlank()||password.isEmpty()||password.isBlank())
-        {
+        if (username.isEmpty() || username.isBlank() || password.isEmpty() || password.isBlank()) {
             FXAlerts.warning("Vui lòng điền đủ thông tin đăng nhập");
             return;
         }
-        String scene = "chuyenTien";
         String port = switch (phanmanh) {
             case "Bến Thành" -> portServer1;
             case "Tân Định" -> portServer2;
@@ -95,32 +99,40 @@ public class Login implements Initializable {
         };
         log.info(phanmanh);
         String url = String.format("jdbc:sqlserver://%s:%s;database=NGANHANG", server, port);
-        log.info(String.format("Log to database(%s:%s): {%s}", username, password, url) );
-        Platform.runLater(() -> {
-            btnLogin.setDisable(true);
-            try {
-                CarambolaApplication.tenantManager.removeTenant("tenant");
-                CarambolaApplication.tenantManager.addTenant("tenant",
-                        url,
-                        username,
-                        password);
-                CarambolaApplication.tenantManager.setCurrentTenant("tenant");
-                List<ThongTinDangNhap> listThongTinDangNhap = thongTinDangNhapRepository.get(username);
-                if (!listThongTinDangNhap.isEmpty()) {
-                    JavaFXApplication.tenNV = listThongTinDangNhap.get(0).getHOTEN();
-                    JavaFXApplication.nhom = listThongTinDangNhap.get(0).getTENNHOM();
-                    JavaFXApplication.maNV = listThongTinDangNhap.get(0).getUSERNAME();
-                    JavaFXApplication.phanManh = phanmanh;
-                    JavaFXApplication.server = server;
-                    StageInitializer.setScene(scene);
-                } else FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));
-            } catch (SQLException e) {
-                FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));
-            } catch (IOException e) {
-                FXAlerts.error("Lỗi chuyển scene");
-            }
-            btnLogin.setDisable(false);
-        });
+        log.info(String.format("Log to database(%s:%s): {%s}", username, password, url));
+        new Thread(()->{
+            Platform.runLater(() -> {
+                btnLogin.setDisable(true);
+                try {
+                    CarambolaApplication.tenantManager.removeTenant("tenant");
+                    CarambolaApplication.tenantManager.addTenant("tenant",
+                            url,
+                            username,
+                            password);
+                    CarambolaApplication.tenantManager.setCurrentTenant("tenant");
+                    log.info("Login successfull. Start get NV info");
+                    List<ThongTinDangNhap> listThongTinDangNhap = thongTinDangNhapRepository.get(username);
+                    log.info("Get NV info successfull");
+                    if (!listThongTinDangNhap.isEmpty()) {
+                        JavaFXApplication.tenNV = listThongTinDangNhap.get(0).getHOTEN();
+                        JavaFXApplication.nhom = listThongTinDangNhap.get(0).getTENNHOM();
+                        JavaFXApplication.maNV = listThongTinDangNhap.get(0).getUSERNAME();
+                        JavaFXApplication.phanManh = phanmanh;
+                        JavaFXApplication.server = server;
+                        StageInitializer.setScene(StageInitializer.guiRut);
+                        log.info("Add new NV info to application");
+                    } else {
+                        log.info("NV info is emty");
+                        FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));}
+                } catch (SQLException e) {
+                    FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));
+                } catch (IOException e) {
+                    FXAlerts.error("Lỗi chuyển scene");
+                }
+                btnLogin.setDisable(false);
+            });
+        }).start();
+
     }
 }
 

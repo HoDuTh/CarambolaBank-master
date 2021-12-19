@@ -18,9 +18,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.ChuyenTienController">
+<VBox fillWidth="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.ChuyenTienController">
    <children>
-      <MenuBar fx:id="menu">
+      <MenuBar fx:id="menu" VBox.vgrow="NEVER">
          <menus>
             <Menu fx:id="menuGiaoDich" mnemonicParsing="false" text="Giao dịch">
                <items>
@@ -65,11 +65,11 @@
             <Menu fx:id="menuHuongDan" mnemonicParsing="false" text="Hướng dẫn" />
          </menus>
       </MenuBar>
-      <SplitPane fx:id="main" dividerPositions="0.2505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="main" dividerPositions="0.2505567928730512" focusTraversable="true" VBox.vgrow="NEVER">
          <items>
             <AnchorPane fx:id="pInput" prefHeight="747.0" prefWidth="336.0">
                <children>
-                  <FlowPane prefHeight="747.0" prefWidth="300.0">
+                  <FlowPane prefHeight="723.0" prefWidth="426.0">
                      <children>
                         <FlowPane fx:id="pnCN" disable="true" prefHeight="66.0" prefWidth="418.0">
                            <padding>
@@ -158,7 +158,7 @@
                               <FlowPane />
                            </children>
                         </FlowPane>
-                        <FlowPane prefHeight="171.0" prefWidth="419.0">
+                        <FlowPane>
                            <padding>
                               <Insets top="20.0" />
                            </padding>
@@ -193,7 +193,7 @@
                   </FlowPane>
                </children>
             </AnchorPane>
-            <ScrollPane prefHeight="728.0" prefWidth="1079.0">
+            <ScrollPane>
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
@@ -210,7 +210,7 @@
                                     <TableColumn fx:id="tcNgayMoTK" prefWidth="164.39996337890625" text="Ngày mở " />
                                  </columns>
                               </TableView>
-                              <TableView fx:id="tbChuyenTien" prefHeight="364.0" prefWidth="1062.0">
+                              <TableView fx:id="tbChuyenTien" prefHeight="400.0" prefWidth="1060.0">
                                  <columns>
                                     <TableColumn fx:id="tcMaGD" prefWidth="108.80004888772964" text="Mã giao dịch" />
                                     <TableColumn fx:id="tcSoTKGui" prefWidth="122.4000244140625" text="Số tài khoản gửi" />
@@ -229,7 +229,7 @@
             </ScrollPane>
          </items>
       </SplitPane>
-      <FlowPane prefHeight="0.0" prefWidth="1514.0">
+      <FlowPane prefWidth="1920.0" VBox.vgrow="NEVER">
          <children>
             <FlowPane prefHeight="18.0" prefWidth="328.0">
                <children>

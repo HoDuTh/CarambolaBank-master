@@ -15,7 +15,7 @@
 
 <VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.ReportKHController">
    <children>
-      <MenuBar fx:id="menu">
+      <MenuBar fx:id="menu" VBox.vgrow="NEVER">
          <menus>
             <Menu fx:id="menuGiaoDich" mnemonicParsing="false" text="Giao dịch">
                <items>
@@ -60,9 +60,9 @@
             <Menu fx:id="menuHuongDan" mnemonicParsing="false" text="Hướng dẫn" />
          </menus>
       </MenuBar>
-      <VBox VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" VBox.vgrow="NEVER">
          <children>
-            <FlowPane alignment="TOP_CENTER" orientation="VERTICAL" prefHeight="747.0" prefWidth="300.0">
+            <FlowPane orientation="VERTICAL" prefHeight="747.0" prefWidth="300.0">
                <children>
                   <FlowPane fx:id="pnCN" disable="true" prefHeight="66.0" prefWidth="418.0">
                      <padding>
@@ -89,7 +89,7 @@
                         <ToolBar fx:id="tbButton" prefHeight="40.0" prefWidth="426.0">
                            <items>
                                  <Button fx:id="btnInChiNhanhCucBo" mnemonicParsing="false" prefHeight="30.0" prefWidth="145.0" text="In danh sách cục bộ" />
-                                 <Button fx:id="btnInToanBoCacChiNhanh" mnemonicParsing="false" prefHeight="30.0" prefWidth="237.0" text="In danh sách toàn bộ các chi nhánh" />
+                                 <Button fx:id="btnInToanBoCacChiNhanh" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="237.0" text="In danh sách toàn bộ các chi nhánh" />
                            </items>
                         </ToolBar>
                         <Separator prefHeight="0.0" prefWidth="419.0" />
@@ -114,7 +114,7 @@
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
                                     </Label>
-                                    <DatePicker fx:id="dpNgayBatDau" prefHeight="38.0" prefWidth="292.0" />
+                                    <DatePicker fx:id="ngayBatDau" prefHeight="38.0" prefWidth="292.0" />
                                  </children>
                                  <padding>
                                     <Insets top="20.0" />
@@ -127,7 +127,7 @@
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
                                     </Label>
-                                    <DatePicker fx:id="dpNgayKetThuc" prefHeight="38.0" prefWidth="292.0" />
+                                    <DatePicker fx:id="ngayKetThuc" prefHeight="38.0" prefWidth="292.0" />
                                  </children>
                                  <padding>
                                     <Insets top="20.0" />
@@ -142,7 +142,7 @@
             </FlowPane>
          </children>
       </VBox>
-      <FlowPane prefHeight="0.0" prefWidth="1920.0">
+      <FlowPane prefHeight="0.0" prefWidth="1920.0" VBox.vgrow="NEVER">
          <children>
             <FlowPane prefHeight="18.0" prefWidth="328.0">
                <children>

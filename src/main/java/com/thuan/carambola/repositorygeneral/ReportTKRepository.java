@@ -15,5 +15,5 @@ public interface ReportTKRepository extends JpaRepository<ReportTK, String> {
     @Transactional
     @Procedure("SP_REPORT_GD")
     List<ReportGD> get(@Param("SOTK") String soTKChuyenTien,
-                        @Param("TO") String soTKNhanTien);
+                       @Param("TO") String soTKNhanTien);
 }
