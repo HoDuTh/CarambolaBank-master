@@ -1,6 +1,7 @@
 package com.thuan.carambola.controller;
 
 import com.thuan.carambola.JavaFXApplication;
+import com.thuan.carambola.Service.Validation;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entitygeneral.NhanVien;
@@ -25,16 +26,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.net.URL;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
 public class NhanVienController extends BaseController implements Initializable {
+
+
     NhanVienRepository nhanVienRepository;
     PhanManhRepository phanManhRepository;
     Stack<Handle<NhanVien>> stack;
     ObservableList<NhanVien> obList;
     Logger log = LoggerFactory.getLogger(NhanVienController.class);
+
+    @FXML
+    private Button btnChuyenCN;
+    @FXML
+    private Button btnTaoTaiKhoan;
     @FXML
     private ComboBox<VDsPhanmanhEntity> cbChiNhanh;
     @FXML
@@ -79,6 +90,44 @@ public class NhanVienController extends BaseController implements Initializable 
         this.nhanVienRepository = nhanVienRepository;
         this.phanManhRepository = phanManhRepository;
         stack = new Stack<Handle<NhanVien>>();
+
+    }
+
+    private void btnChuyenCN(ActionEvent actionEvent) {
+        NhanVien nhanVien = tbNhanVien.getSelectionModel().getSelectedItem();
+        if (nhanVien == null) {
+            FXAlerts.warning("Bạn chưa chọn nhân viên chuyển");
+            return;
+        }
+        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn chuyển nhân viên %s với số MANV là %s", nhanVien.getHoTen(), nhanVien.getId()));
+        if (!check) return;
+        TextInputDialog td = new TextInputDialog("");
+        td.setHeaderText("Nhập mã nhân viên mới");
+        Validation.valideMaNV(td.getEditor());
+        td.showAndWait();
+        String n = td.getEditor().getText();
+        if (n.isBlank()) {
+            FXAlerts.warning("Mã nhân viên mới rỗng");
+            return;
+        }
+        new Thread(() -> {
+            load();
+            Map<String, String> result = nhanVienRepository.move(nhanVien.getId(), n);
+            String msg = result.get("MSG");
+            Platform.runLater(() -> {
+                if (result.get("ISSUCCESS").equals("1")) {
+                    Handle<NhanVien> handle = new Handle<>();
+                    handle.setEntity(nhanVien);
+                    handle.setAction("xoa");
+                    stack.push(handle);
+                    FXAlerts.info(msg);
+                } else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+            unload();
+        }).start();
     }
 
     static void list2Table(TableColumn<NhanVien, String> tc1ChiNhanh,
@@ -111,7 +160,56 @@ public class NhanVienController extends BaseController implements Initializable 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        if(Objects.equals(JavaFXApplication.nhom, "ChiNhanh"))
+        {
+            btnTaoTaiKhoan.setDisable(false);
+            btnChuyenCN.setDisable(false);
+        }
+        btnTaoTaiKhoan.setOnAction(this::btnTaoTaiKhoan);
+        btnChuyenCN.setOnAction(this::btnChuyenCN);
+    }
 
+    private void btnTaoTaiKhoan(ActionEvent actionEvent) {
+        NhanVien nhanVien = tbNhanVien.getSelectionModel().getSelectedItem();
+        if (nhanVien == null) {
+            FXAlerts.warning("Bạn chưa chọn nhân viên để tạo tài khoản đăng nhập");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for(String a: nhanVien.getHoTen().split(" "))
+        {
+            sb.append(a.toUpperCase().charAt(0));
+        }
+        String loginName = sb + nhanVien.getId();
+        boolean check = FXAlerts.confirm(
+                String.format(
+                        "Bạn có thực sự muốn tạo tài khoản đăng nhập cho nhân viên %s\n Với  MANV là %s \n Và tên đăng nhập là %s" , nhanVien.getHoTen(), nhanVien.getId(), loginName));
+        if (!check) return;
+
+
+        TextInputDialog td = new TextInputDialog("");
+        td.setHeaderText("Nhập mật khẩu");
+        Validation.valideMaNV(td.getEditor());
+        td.showAndWait();
+        String password = td.getEditor().getText();
+        if (password.isBlank()) {
+            FXAlerts.warning("Mật khẩu không được để trống");
+            return;
+        }
+        new Thread(() -> {
+            load();
+            Platform.runLater(()->{
+                btnChuyenCN.setDisable(true);
+                btnTaoTaiKhoan.setDisable(true);
+            });
+            String result = nhanVienRepository.taoLogin(loginName, password, nhanVien.getId(), JavaFXApplication.nhom);
+            Platform.runLater(() -> {
+                FXAlerts.warning(result);
+                btnChuyenCN.setDisable(false);
+                btnTaoTaiKhoan.setDisable(false);
+            });
+            unload();
+        }).start();
     }
 
     @Override
@@ -176,22 +274,268 @@ public class NhanVienController extends BaseController implements Initializable 
 
     @Override
     void btnXoa(ActionEvent actionEvent) {
+        NhanVien nhanVien = tbNhanVien.getSelectionModel().getSelectedItem();
+        if (nhanVien == null) {
+            FXAlerts.warning("Bạn chưa chọn nhân viên để xóa");
+            return;
+        }
+        boolean check = FXAlerts.confirm(String.format("Bạn có thực sự muốn xóa nhân viên %s với số MANV là %s", nhanVien.getHoTen(), nhanVien.getId()));
+        if (!check) return;
 
+        new Thread(() -> {
+            load();
+            Map<String, String> result = nhanVienRepository.delete(nhanVien.getId());
+            String msg = result.get("MSG");
+            Platform.runLater(() -> {
+                if (result.get("ISSUCCESS").equals("1")) {
+                    Handle<NhanVien> handle = new Handle<>();
+                    handle.setEntity(nhanVien);
+                    handle.setAction("xoa");
+                    stack.push(handle);
+                    FXAlerts.info(msg);
+                } else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+            });
+            unload();
+        }).start();
     }
 
     @Override
     void btnSua(ActionEvent actionEvent) {
-
+        NhanVien nhanVien    = tbNhanVien.getSelectionModel().getSelectedItem();
+        if (nhanVien == null) {
+            FXAlerts.warning("Chưa chọn nhân viên để sửa");
+            return;
+        }
+        String maNV = nhanVien.getId();
+        String ho = tfHo.getText();
+        if (ho.isBlank()) {
+            FXAlerts.warning("Thiếu họ");
+            return;
+        }
+        String ten = tfTen.getText();
+        if (ten.isBlank()) {
+            FXAlerts.warning("Thiếu tên");
+            return;
+        }
+        String diaChi = tfDiaChi.getText();
+        if (diaChi.isBlank()) {
+            FXAlerts.warning("Thiếu địa chỉ");
+            return;
+        }
+        String soDT = tfSoDienThoai.getText();
+        RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
+        if (selectedRadioButton == null) {
+            FXAlerts.warning("Chưa chọn giới tính");
+            return;
+        }
+        String phai = selectedRadioButton.getText();
+        String hoTen = ho + " " + ten;
+        boolean check = FXAlerts.confirm(String.format("""
+                        Bạn có thực sự muốn sửa nhân viên với thông tin:
+                        Mã NV    :  %s
+                        Họ và tên:  %s -> %s
+                        Địa chỉ:    %s -> %s
+                        Phái:       %s -> %s
+                        Số điện thoại: %s -> %s\s""",
+                maNV,
+                nhanVien.getHoTen(), hoTen,
+                nhanVien.getDiaChi(), diaChi,
+                nhanVien.getPhai(), phai,
+                nhanVien.getSoDT(), soDT)
+                );
+        if (!check) return;
+        new Thread(() -> {
+            load();
+            Map<String, String> result = nhanVienRepository.edit(maNV, ho, ten, diaChi, phai, soDT);
+            String msg = result.get("MSG");
+            Platform.runLater(() -> {
+                if (result.get("ISSUCCESS").equals("1")) {
+                    Handle<NhanVien> handle = new Handle<>();
+                    handle.setEntity(nhanVien);
+                    handle.setAction("sua");
+                    stack.push(handle);
+                    FXAlerts.info(msg);
+                } else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+                unload();
+            });
+        }).start();
     }
 
     @Override
     void btnGhi(ActionEvent actionEvent) {
-
+        String maNV = tfMANV.getText();
+        if (maNV.isBlank()) {
+            FXAlerts.warning("Thiếu mã nhân viên");
+            return;
+        }
+        String ho = tfHo.getText();
+        if (ho.isBlank()) {
+            FXAlerts.warning("Thiếu họ");
+            return;
+        }
+        String ten = tfTen.getText();
+        if (ten.isBlank()) {
+            FXAlerts.warning("Thiếu tên");
+            return;
+        }
+        String diaChi = tfDiaChi.getText();
+        if (diaChi.isBlank()) {
+            FXAlerts.warning("Thiếu địa chỉ");
+            return;
+        }
+        String soDT = tfSoDienThoai.getText();
+        RadioButton selectedRadioButton = (RadioButton) tgGioiTinh.getSelectedToggle();
+        if (selectedRadioButton == null) {
+            FXAlerts.warning("Chưa chọn giới tính");
+            return;
+        }
+        String phai = selectedRadioButton.getText();
+        String hoTen = ho + " " + ten;
+        boolean check = FXAlerts.confirm(String.format("""
+                Bạn có thực sự muốn tạo nhân viên với thông tin:
+                Mã nhân viên: %s
+                Họ và tên: %s
+                Địa chỉ: %s
+                Phái: %s
+                Số điện thoại: %s\s""", maNV, hoTen, diaChi, phai, soDT));
+        if (!check) return;
+        new Thread(() -> {
+            load();
+            Map<String, String> result = nhanVienRepository.add(maNV, ho, ten, diaChi, phai, soDT, "0");
+            String msg = result.get("MSG");
+            Platform.runLater(() -> {
+                if (result.get("ISSUCCESS").equals("1")) {
+                    NhanVien nv = new NhanVien();
+                    nv.setId(maNV);
+                    nv.setHo(ho);
+                    nv.setTen(ten);
+                    nv.setDiaChi(diaChi);
+                    nv.setPhai(phai);
+                    nv.setSoDT(soDT);
+                    nv.setTrangThaiXoa(0);
+                    Handle<NhanVien> handle = new Handle<>();
+                    handle.setEntity(nv);
+                    handle.setAction("ghi");
+                    stack.push(handle);
+                    FXAlerts.info(msg);
+                } else {
+                    FXAlerts.error(msg);
+                }
+                updateData();
+                unload();
+            });
+        }).start();
     }
 
     @Override
     void btnHoanTac(ActionEvent actionEvent) {
-
+        if (stack.isEmpty()) {
+            FXAlerts.info("Không còn tác vụ để hoàn tác");
+            return;
+        }
+        Handle<NhanVien> handler = stack.pop();
+        NhanVien nhanVien = handler.getEntity();
+        boolean check;
+        switch (handler.getAction()) {
+            case "ghi" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn loại bỏ việc thêm nhân viên với thông tin:
+                                Mã nhân viên: %s
+                                Họ và tên:  %s
+                                Địa chỉ:    %s
+                                Phái:       %s
+                                Số điện thoại: %s\s""",
+                        nhanVien.getId(),
+                        nhanVien.getHoTen(),
+                        nhanVien.getDiaChi(),
+                        nhanVien.getPhai(),
+                        nhanVien.getSoDT()));
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                }
+                new Thread(() -> {
+                    load();
+                    Map<String, String> result = nhanVienRepository.delete(nhanVien.getId());
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
+                }).start();
+            }
+            case "sua" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn hoàn lại nhân viên với thông tin:
+                                CMND: %s
+                                Họ và tên:  %s
+                                Địa chỉ:    %s
+                                Phái:       %s
+                                Số điện thoại: %s\s""",
+                        nhanVien.getId(),
+                        nhanVien.getHoTen(),
+                        nhanVien.getDiaChi(),
+                        nhanVien.getPhai(),
+                        nhanVien.getSoDT()));
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                }
+                ;
+                new Thread(() -> {
+                    load();
+                    Map<String, String> result = nhanVienRepository.edit(
+                            nhanVien.getId(),
+                            nhanVien.getHo(),
+                            nhanVien.getTen(),
+                            nhanVien.getDiaChi(),
+                            nhanVien.getPhai(),
+                            nhanVien.getSoDT()
+                    );
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
+                }).start();
+            }
+            case "xoa" -> {
+                check = FXAlerts.confirm(String.format("""
+                                Bạn có thực sự muốn hoàn tác việc xóa nhân viên với thông tin:
+                                Mã NV: %s
+                                Họ và tên: %s
+                                Địa chỉ: %s
+                                Phái: %s
+                                Số điện thoại: %s\s""",
+                        nhanVien.getId(),
+                        nhanVien.getHoTen(),
+                        nhanVien.getDiaChi(),
+                        nhanVien.getPhai(),
+                        nhanVien.getSoDT()));
+                if (!check) {
+                    stack.push(handler);
+                    return;
+                }
+                new Thread(() -> {
+                    load();
+                    Map<String, String> result = nhanVienRepository.add(
+                            nhanVien.getId(),
+                            nhanVien.getHo(),
+                            nhanVien.getTen(),
+                            nhanVien.getDiaChi(),
+                            nhanVien.getPhai(),
+                            nhanVien.getSoDT(),"0");
+                    showResult(result.get("ISSUCCESS"), result.get("MSG"));
+                    updateData();
+                    unload();
+                }).start();
+            }
+            default -> {
+                FXAlerts.info("Tác vụ đã lưu không phù hợp");
+            }
+        }
     }
 
     @Override
@@ -206,7 +550,11 @@ public class NhanVienController extends BaseController implements Initializable 
 
     @Override
     void initValidation() {
-
+        Validation.valideMaNV(tfMANV);
+        Validation.valideHo(tfHo);
+        Validation.valideTen(tfTen);
+        Validation.valideDiaChi(tfDiaChi);
+        Validation.valideSoDT(tfSoDienThoai);
     }
 
     @Override
@@ -214,12 +562,6 @@ public class NhanVienController extends BaseController implements Initializable 
         list2Table(tc1ChiNhanh, tc1DiaChi, tc1Ho, tc1MaNV, tc1Phai, tc1SoDT, tc1Ten, tc1TrangThaiXoa);
         tbNhanVien.setItems(obList);
         filtered();
-    }
-
-    void addNV(ActionEvent actionEvent) {
-        Map<String, String> s = nhanVienRepository.add("32243", "Hoàng", "Đức Thuận", "2324", "Nam", "73242020", "0");
-        updateData();
-        FXAlerts.info(s.get("MSG"));
     }
 
     @Override

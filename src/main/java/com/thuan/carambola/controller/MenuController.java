@@ -1,5 +1,6 @@
 package com.thuan.carambola.controller;
 
+import com.thuan.carambola.JavaFXApplication;
 import com.thuan.carambola.StageInitializer;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.entityprimary.VDsPhanmanhEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Component
@@ -86,9 +88,17 @@ public abstract class MenuController implements Initializable {
         ObservableList<VDsPhanmanhEntity> options =
                 FXCollections.observableArrayList(list);
         cbChiNhanh.setItems(options);
+        for(VDsPhanmanhEntity a: list)
+        {
+            if(Objects.equals(a.getTenserver(), JavaFXApplication.server))
+            {
+                cbChiNhanh.getSelectionModel().select(a);
+            }
+        }
     }
     //-------------------Menu-------------------
     void initMenu() {
+        menuItemDangXuat.setOnAction(this::setMenuItemDangXuat);
         menuItemChuyenTien.setOnAction(this::setMenuItemChuyenTien);
         menuItemTaiKhoan.setOnAction(this::setMenuItemTaiKhoan);
         menuItemGuiRut.setOnAction(this::setMenuItemGuiRut);
@@ -163,6 +173,13 @@ public abstract class MenuController implements Initializable {
             FXAlerts.error("Trang này đang không hoạt động");
         }
     }
+    private void setMenuItemDangXuat(ActionEvent actionEvent) {
+        try {
 
+            StageInitializer.setScene(StageInitializer.login);
+        } catch (IOException e) {
+            FXAlerts.error("Trang này đang không hoạt động");
+        }
+    }
 
 }

@@ -281,16 +281,17 @@
                                     <TableColumn fx:id="tc2ChiNhanhTK" minWidth="2.93341064453125" prefWidth="121.5999755859375" text="Chi nhánh" />
                                  </columns>
                               </TableView>
-                              <TableView fx:id="tbKhachHang" prefHeight="364.0" prefWidth="1062.0">
+                              <TableView fx:id="tbKhachHang">
                                  <columns>
                                     <TableColumn fx:id="tc1CMND" prefWidth="108.80004888772964" text="CMND" />
-                                    <TableColumn fx:id="tc1Ho" prefWidth="122.4000244140625" text="Họ" />
-                                    <TableColumn fx:id="tc1Ten" prefWidth="207.20001220703125" text="Tên" />
-                                    <TableColumn fx:id="tc1Phai" minWidth="2.93341064453125" prefWidth="121.5999755859375" text="Giới tính" />
-                                    <TableColumn fx:id="tc1SoDienThoai" prefWidth="111.99993896484375" text="Số điện thoại" />
-                                    <TableColumn fx:id="tc1NgayCap" minWidth="0.0" prefWidth="157.5999755859375" text="Ngày cấp" />
-                                    <TableColumn fx:id="tc1DiaChi" minWidth="0.0" prefWidth="212.800048828125" text="Địa chỉ" />
-                                    <TableColumn fx:id="tc1ChiNhanh" minWidth="0.0" prefWidth="148.7999267578125" text="Chi nhánh" />
+                                    <TableColumn fx:id="tc1Ho" prefWidth="171.19995880126953" text="Họ" />
+                                    <TableColumn fx:id="tc1Ten" prefWidth="95.20001220703125" text="Tên" />
+                                    <TableColumn fx:id="tc1Phai" minWidth="2.93341064453125" prefWidth="76.7999267578125" text="Giới tính" />
+                                    <TableColumn fx:id="tc1SoDienThoai" prefWidth="136.80007934570312" text="Số điện thoại" />
+                                    <TableColumn fx:id="tc1NgayCap" minWidth="0.0" prefWidth="109.5999755859375" text="Ngày cấp" />
+                                    <TableColumn fx:id="tc1DiaChi" minWidth="0.0" prefWidth="199.199951171875" text="Địa chỉ" />
+                                    <TableColumn fx:id="tc1ChiNhanh" maxWidth="98.4000244140625" minWidth="-1.0" prefWidth="98.4000244140625" text="Chi nhánh" />
+                                    <TableColumn minWidth="0.0" prefWidth="178.39996337890625" />
                                  </columns>
                               </TableView>
                            </items>

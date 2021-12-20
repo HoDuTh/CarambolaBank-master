@@ -36,7 +36,7 @@ public class Validation {
         valideTextFieldLength(soDT, 15);
     }
 
-    static void valideMaNV(TextField soTK) {
+    public static void valideMaNV(TextField soTK) {
         valideTextFieldLength(soTK, 10);
     }
 

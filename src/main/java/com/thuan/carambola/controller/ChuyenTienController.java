@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -246,25 +247,25 @@ public class ChuyenTienController extends BaseController implements Initializabl
         } else {
             soTien = new BigInteger(tfSoTien.getText());
         }
-        Instant ngayGD = getDateTime();
+        boolean check = false;
         String maNV = JavaFXApplication.maNV;
         if (maNV.isBlank()) {
             FXAlerts.warning("Thiếu nhân viên thực hiện công việc");
             return;
         }
-        boolean check = FXAlerts.confirm(String.format("""
+        check = FXAlerts.confirm(String.format("""
                 Bạn có chắc chắn muốn thực hiện chuyển tiền\040
                 Từ tài khoản:               %s\040
                 Đến tài khoản:              %s
                 Với số tiền là:             %s
-                Ngày thực hiện giao dịch:   %s""", soTKChuyen, soTKNhan, formatCurrency(soTien), ngayGD.toString()));
+                Ngày thực hiện giao dịch:   %s""", soTKChuyen, soTKNhan, formatCurrency(soTien), LocalDateTime.now().toString()));
         if (!check) return;
         BigInteger finalSoTien = soTien; // Do cái java nó yêu cầu chứ em không có muốn làm như vậy đâu
         new Thread(() -> {
             load();
-            Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, finalSoTien, ngayGD, maNV);
+            Map<String, String> result = chuyenTienRepository.send(soTKChuyen, soTKNhan, finalSoTien, LocalDateTime.now(), maNV);
             showResult(result.get("ISSUCCESS"), result.get("MSG"));
-            updateData();
+            Platform.runLater(this::updateData);
             unload();
         }).start();
     }

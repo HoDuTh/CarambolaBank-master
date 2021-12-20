@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="employee-rpt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0bbf8bb2-6345-43f2-8a30-427326eb3902">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="createdBy" class="java.lang.String"/>
+	<parameter name="createdDate" class="java.time.LocalDateTime"/>
+	<field name="id" class="java.lang.String"/>
+	<field name="ho" class="java.lang.String"/>
+	<field name="ten" class="java.lang.String"/>
+	<field name="diaChi" class="java.lang.String"/>
+	<field name="ngayCap" class="java.time.Instant"/>
+	<field name="maCN" class="java.lang.String"/>
+	<title>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="554" height="42" uuid="2be3e2f1-f40f-4e2b-9479-3c63dea278e6"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Thống kê danh sách khách hàng]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="41" width="554" height="20" uuid="02efee52-b478-4128-b336-de64d3a91959"/>
+				<staticText>
+					<reportElement x="0" y="0" width="60" height="20" uuid="943bbe5f-427f-4818-9689-3ede4e575015">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CMND]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="60" y="0" width="120" height="20" uuid="832fbaae-98cd-44ac-a71d-54983bf28d52">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Họ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="0" width="66" height="20" uuid="778eb58c-aa78-4262-bcc1-2c1e3a5ea9d8">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tên]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="246" y="0" width="144" height="20" uuid="188c1e61-ac83-4352-8fae-825fd4bd6454">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Địa chỉ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="0" width="90" height="20" uuid="4d98eb91-e4eb-4617-b1ad-58ae08eabb4b">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ngày cấp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="480" y="0" width="74" height="20" uuid="30edff7e-a47c-46a1-8e73-700116b73aeb">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mã chi nhánh]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout"/>
+			<frame>
+				<reportElement x="0" y="0" width="554" height="20" isPrintInFirstWholeBand="true" uuid="983830c7-a458-4c08-9361-e2e2ed7e2c19"/>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" x="0" y="0" width="60" height="20" isPrintInFirstWholeBand="true" uuid="6346cdaf-94ae-46ee-8f57-a5788cfe761f"/>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="2.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" x="60" y="0" width="120" height="20" isPrintInFirstWholeBand="true" uuid="1ad10141-6c6a-4aa8-9a95-24b619cb61d1">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="2.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ho}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" x="180" y="0" width="66" height="20" isPrintInFirstWholeBand="true" uuid="1ee7c425-e759-491e-b116-31b9105aaca8">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="2.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ten}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" x="246" y="0" width="144" height="20" isPrintInFirstWholeBand="true" uuid="195afa1f-e698-4b35-9b04-c21d2267df49">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="2.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{diaChi}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" x="390" y="0" width="90" height="20" isPrintInFirstWholeBand="true" uuid="fff8621a-950a-48ca-90e0-677f7f8ea25a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="2.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ngayCap}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="ElementGroupBottom" isPrintRepeatedValues="false" mode="Transparent" x="480" y="0" width="74" height="20" isPrintInFirstWholeBand="true" uuid="c86e00fa-565f-4b28-b224-85cc31d927a5">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="0">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{maCN}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="50">
+			<textField>
+				<reportElement x="480" y="0" width="74" height="20" uuid="4d92d6ba-b53f-49c8-ac5a-b28a7cb86ae7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{createdDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="390" y="0" width="90" height="20" uuid="a9f3ef74-cc27-4af2-aca4-97ee83c3fc1f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Ngày tạo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="20" width="90" height="20" uuid="a9f3ef74-cc27-4af2-aca4-97ee83c3fc1f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Nhân viên]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="480" y="20" width="74" height="20" uuid="4d92d6ba-b53f-49c8-ac5a-b28a7cb86ae7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

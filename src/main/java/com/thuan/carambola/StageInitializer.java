@@ -29,6 +29,11 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     public static Resource reportGD;
     public static Resource reportKH;
     public static Resource reportTK;
+    public static Resource zReportGD;
+    public static Resource zReportKH;
+    public static Resource zReportTK;
+    public static Resource zReportTKCN;
+
     private static String applicationTitle;
     private static ApplicationContext applicationContext;
     private static Stage primaryStage;
@@ -45,9 +50,14 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
                             @Value("classpath:NhanVien.fxml") Resource nhanVien,
                             @Value("classpath:ReportGD.fxml") Resource reportGD,
                             @Value("classpath:ReportKH.fxml") Resource reportKH,
-                            @Value("classpath:ReportTK.fxml") Resource reportTK) {
+                            @Value("classpath:ReportTK.fxml") Resource reportTK,
+                            @Value("classpath:zReportGD.jrxml") Resource zReportGD,
+                            @Value("classpath:zReportKH.jrxml") Resource zReportKH,
+                            @Value("classpath:zReportTK.jrxml") Resource zReportTK,
+                            @Value("classpath:zReportTKCN.jrxml") Resource zReportTKCN) {
         StageInitializer.applicationTitle = applicationTitle;
         StageInitializer.applicationContext = applicationContext;
+
         StageInitializer.resetSceen = resetSceen;
         StageInitializer.chuyenTien = chuyenTien;
         StageInitializer.login = login;
@@ -59,6 +69,10 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         StageInitializer.reportKH = reportKH;
         StageInitializer.reportTK = reportTK;
 
+        StageInitializer.zReportGD = zReportGD;
+        StageInitializer.zReportKH = zReportKH;
+        StageInitializer.zReportTK = zReportTK;
+        StageInitializer.zReportTKCN = zReportTKCN;
     }
 
     public static void setScene(String name) throws IOException {
@@ -78,10 +92,15 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     public static void setScene(Resource resource) throws IOException {
         if (currentResource == resource) return;
+        if (currentResource != null && resource == login) {
+            boolean check = FXAlerts.confirm("Bạn có chắc chắn muốn đăng xuất ra khỏi hệ thống");
+            if(!check) return;
+        }
         if (currentResource != null && currentResource != login) {
             boolean check = FXAlerts.confirm("Đổi sang dịch vụ khác");
             if (!check) return;
         }
+
         FXMLLoader loader;
         Parent parent;
         loader = new FXMLLoader(resource.getURL());
@@ -102,7 +121,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
             primaryStage.setWidth(bounds.getWidth());
             primaryStage.setHeight(bounds.getHeight());
             primaryStage.setMaximized(true);
-            setScene(chuyenTien);
+            setScene(login);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

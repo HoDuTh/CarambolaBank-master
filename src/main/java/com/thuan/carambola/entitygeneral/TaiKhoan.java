@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -63,7 +64,7 @@ public class TaiKhoan {
     private String maCN;
 
     @Column(name = "NGAYMOTK")
-    private Instant ngayMoTK;
+    private LocalDateTime ngayMoTK;
 
     @Column(name = "rowguid", nullable = false)
     private UUID rowguid;
@@ -77,7 +78,7 @@ public class TaiKhoan {
         this.maCN = "";
     }
 
-    public TaiKhoan(String sotk, String cmnd, Instant ngay) {
+    public TaiKhoan(String sotk, String cmnd, LocalDateTime ngay) {
         this.id = sotk;
         this.cmnd = cmnd;
         this.ngayMoTK = ngay;

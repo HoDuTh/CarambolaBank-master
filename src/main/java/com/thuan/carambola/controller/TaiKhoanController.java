@@ -31,6 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -172,8 +174,6 @@ public class TaiKhoanController extends BaseController implements Initializable 
         if (!check) return;
         tfCMDN.setText("");
         tfSoTK.setText("");
-        dpNgay.getEditor().clear();
-        dpNgay.setValue(null);
     }
 
     @Override
@@ -215,7 +215,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
         }
         String cmnd = tfCMDN.getText();
         String soTK = taiKhoan.getId();
-        Instant ngay = getDateTime();
+        LocalDateTime ngay = LocalDateTime.now();
         if (cmnd.isBlank()) {
             FXAlerts.warning("Chứng minh nhân dân không được để trống");
             return;
@@ -251,7 +251,7 @@ public class TaiKhoanController extends BaseController implements Initializable 
     void btnGhi(ActionEvent actionEvent) {
         String cmnd = tfCMDN.getText();
         String soTK = tfSoTK.getText();
-        Instant ngay = getDateTime();
+        LocalDateTime ngay = LocalDateTime.now();
         if (cmnd.isBlank()) {
             FXAlerts.warning("Chứng minh nhân dân không được để trống");
             return;
@@ -438,10 +438,10 @@ public class TaiKhoanController extends BaseController implements Initializable 
         tfSoTK.setText(taiKhoan.getId());
         tfCMDN.setText(taiKhoan.getCmnd());
 
-        Instant ngayCap = taiKhoan.getNgayMoTK();
-        dpNgay.setValue(DateTimeService.get(ngayCap));
-        tfHour.setText(String.valueOf(DateTimeService.getHour(ngayCap)));
-        tfMinute.setText(String.valueOf(DateTimeService.getMinute(ngayCap)));
+        LocalDateTime ngayCap = taiKhoan.getNgayMoTK();
+        dpNgay.setValue(LocalDate.from(ngayCap));
+        tfHour.setText(String.valueOf(ngayCap.getHour()));
+        tfMinute.setText(String.valueOf(ngayCap.getMinute()));
     }
 
     private boolean checkEmtyInput() // kiểm tra người dùng có đang làm việc

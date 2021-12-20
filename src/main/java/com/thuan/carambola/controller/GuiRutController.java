@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -163,7 +164,6 @@ public class GuiRutController extends BaseController implements Initializable {
         if (!check) return;
         tfSoTK.setText("");
         tfSoTien.setText("");
-        clearDateTime();
     }
 
     @Override
@@ -192,6 +192,12 @@ public class GuiRutController extends BaseController implements Initializable {
             FXAlerts.warning("Chưa chọn số tài khoản");
             return;
         }
+        boolean check = false;
+
+        if (tfSoTien.getText().isBlank()) {
+            FXAlerts.warning("Chưa nhập số tiền cần chuyển");
+            return;
+        }
         if (tfSoTien.getText().isBlank()) {
             FXAlerts.warning("Chưa nhập số tiền cần chuyển");
             return;
@@ -213,20 +219,20 @@ public class GuiRutController extends BaseController implements Initializable {
         if (loaiGD.equals("Gửi tiền"))
             loaiGD = "GT";
         else loaiGD = "RT";
-
         BigInteger finalSoTien = soTien;
         String finalLoaiGD = loaiGD;
-        boolean check = FXAlerts.confirm(String.format("""
+        check = FXAlerts.confirm(String.format("""
                 Bạn có chắc chắn muốn thực hiện %s\040
                 Với tài khoản:              %s\040
                 Với số tiền là:             %s
-                Ngày thực hiện giao dịch:   %s""", selectedRadioButton.getText(), soTK, formatCurrency(soTien), ngayGD.toString()));
+                Ngày thực hiện giao dịch:   %s""", selectedRadioButton.getText(), soTK, formatCurrency(soTien), LocalDateTime.now().toString()));
         if (!check) return;
         new Thread(() -> {
             load();
-            Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, ngayGD, finalLoaiGD, maNV);
-            showResult(result.get("MSG"), result.get("ISSUCCESS"));
-            updateData();
+            Map<String, String> result = guiRutRepository.send(soTK, finalSoTien, LocalDateTime.now(), finalLoaiGD, maNV);
+            System.out.println(result);
+            showResult(result.get("ISSUCCESS"), result.get("MSG"));
+            Platform.runLater(this::updateData);
             unload();
         }).start();
     }

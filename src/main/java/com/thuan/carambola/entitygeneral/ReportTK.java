@@ -1,26 +1,24 @@
 package com.thuan.carambola.entitygeneral;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
-@NamedStoredProcedureQueries({
-        @NamedStoredProcedureQuery(name = "ReportTK.get", procedureName = "SP_REPORT_GD", parameters = {
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "FROM", type = Instant.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "TO", type = Instant.class)
-        })
-})
+@Data
 public class ReportTK {
     @Id
     @Column(name = "SOTK", nullable = false)
-    private String soTK;
+    public String soTK;
 
     @Column(name = "CMND", nullable = false)
-    private String cmnd;
+    public String cmnd;
 
     @Column(name = "NGAYMOTK", nullable = false)
-    private Instant ngayMoTK;
+    public LocalDateTime ngayMo;
 
     @Column(name = "MACN", nullable = false)
-    private String maCN;
+    public String maCN;
 }

@@ -182,7 +182,7 @@
                                     </FlowPane>
                                     <FlowPane prefHeight="41.0" prefWidth="418.0">
                                        <children>
-                                          <Label prefWidth="80.0" text="Địa chỉ ">
+                                          <Label prefWidth="80.0" text="Địa chỉ *">
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
@@ -199,7 +199,7 @@
                                     </FlowPane>
                                     <FlowPane prefHeight="41.0" prefWidth="418.0">
                                        <children>
-                                          <Label prefHeight="38.0" prefWidth="103.0" text="Số điện thoại * ">
+                                          <Label prefHeight="38.0" prefWidth="103.0" text="Số điện thoại ">
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
@@ -224,10 +224,12 @@
                            </padding>
                            <children>
                               <Separator prefHeight="2.0" prefWidth="419.0" />
-                              <FlowPane fx:id="pnSSS" prefHeight="243.0" prefWidth="332.0" />
+                              <FlowPane fx:id="pnSSS" prefHeight="243.0" prefWidth="285.0" />
                               <ToolBar orientation="VERTICAL" prefHeight="230.0" prefWidth="87.0">
                                  <items>
-                                    <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Cập nhật" />
+                                    <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="30.0" prefWidth="116.0" text="Cập nhật" />
+                                    <Button fx:id="btnTaoTaiKhoan" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="115.0" text="Tạo tài khoản" />
+                                    <Button fx:id="btnChuyenCN" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="115.0" text="Chuyển chi nhánh" />
                                  </items>
                               </ToolBar>
                            </children>

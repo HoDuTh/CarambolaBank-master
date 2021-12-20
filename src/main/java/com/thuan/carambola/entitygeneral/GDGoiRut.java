@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -23,7 +24,7 @@ import java.util.UUID;
         @NamedStoredProcedureQuery(name = "GDGoiRut.send", procedureName = "SP_GD_GUIRUT", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTK", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "SOTIEN", type = BigInteger.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYGD", type = Instant.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "NGAYGD", type = LocalDateTime.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "LOAIGD", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
@@ -40,7 +41,7 @@ public class GDGoiRut {
     private String loaigd;
 
     @Column(name = "NGAYGD", nullable = false)
-    private Instant ngayGD;
+    private LocalDateTime ngayGD;
 
     @Column(name = "SOTIEN", nullable = false)
     private BigInteger soTien;

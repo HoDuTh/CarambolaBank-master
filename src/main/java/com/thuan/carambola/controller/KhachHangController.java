@@ -226,6 +226,7 @@ public class KhachHangController extends BaseController implements Initializable
 
     @Override
     void btnXoa(ActionEvent actionEvent) {
+
         KhachHang khachHang = tbKhachHang.getSelectionModel().getSelectedItem();
         if (khachHang == null) {
             FXAlerts.warning("Bạn chưa chọn khách hàng để xóa");
@@ -320,7 +321,6 @@ public class KhachHangController extends BaseController implements Initializable
             });
         }).start();
     }
-
     @Override
     void btnGhi(ActionEvent actionEvent) {
         String cmnd = tfCMND.getText();
@@ -387,6 +387,7 @@ public class KhachHangController extends BaseController implements Initializable
                 unload();
             });
         }).start();
+        unload();
     }
 
     @Override

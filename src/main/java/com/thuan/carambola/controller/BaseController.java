@@ -18,8 +18,15 @@ import javafx.scene.layout.FlowPane;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.math.BigInteger;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -32,8 +39,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Component
+@Lazy
 public abstract class BaseController extends MenuController implements Initializable {
-
 
     @FXML
     FlowPane pnInput;
@@ -80,7 +87,9 @@ public abstract class BaseController extends MenuController implements Initializ
     @FXML
     private Slider sliderMinute;
 
+    EntityManager em;
     public BaseController(PhanManhRepository phanManhRepository) {
+
         super(phanManhRepository);
     }
 
@@ -108,6 +117,7 @@ public abstract class BaseController extends MenuController implements Initializ
 
     abstract void initValidation();
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
@@ -124,6 +134,7 @@ public abstract class BaseController extends MenuController implements Initializ
             initTableEvent();
         } // Chỉ có quyền chi nhánh mới khởi tạo các event table
         initValidation();
+
     }
 
     void load() {

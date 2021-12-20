@@ -203,8 +203,8 @@
                                  <columns>
                                     <TableColumn fx:id="tcSoTK" prefWidth="108.80004888772964" text="Số tài khoản" />
                                     <TableColumn fx:id="tcCMNDTK" prefWidth="107.20000457763672" text="CMND" />
-                                    <TableColumn fx:id="tcHoTen" prefWidth="161.6000518798828" text="Họ và tên" />
-                                    <TableColumn fx:id="tcSoDienThoai" prefWidth="120.79998779296875" text="Số điện thoại" />
+                                    <TableColumn fx:id="tcHoTen" prefWidth="161.6000518798828" text="Họ và tên" visible="false" />
+                                    <TableColumn fx:id="tcSoDienThoai" prefWidth="120.79998779296875" text="Số điện thoại" visible="false" />
                                     <TableColumn fx:id="tcSoDuTK" prefWidth="164.800048828125" text="Số dư" />
                                     <TableColumn fx:id="tcChiNhanhTK" minWidth="2.93341064453125" prefWidth="139.2000732421875" text="Chi nhánh" />
                                     <TableColumn fx:id="tcNgayMoTK" prefWidth="164.39996337890625" text="Ngày mở " />
@@ -218,7 +218,7 @@
                                     <TableColumn fx:id="tcSoTKNhan" prefWidth="162.40005493164062" text="Số tài khoản nhận" />
                                     <TableColumn fx:id="tcNgayGD" prefWidth="227.99993896484375" text="Ngày giao dịch" />
                                     <TableColumn fx:id="tcMaNV" prefWidth="138.39990234375" text="Mã nhân viên" />
-                                    <TableColumn fx:id="tcHoTenNV" prefWidth="207.20001220703125" text="Họ và tên nhân viên" />
+                                    <TableColumn fx:id="tcHoTenNV" prefWidth="207.20001220703125" text="Họ và tên nhân viên" visible="false" />
                                  </columns>
                               </TableView>
                            </items>

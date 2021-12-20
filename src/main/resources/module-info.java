@@ -1,4 +1,5 @@
 module com.thuan.carambola {
+
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -17,13 +18,15 @@ module com.thuan.carambola {
     requires org.apache.logging.log4j;
     requires org.slf4j;
 
-    requires static lombok;
+    requires lombok;
     requires spring.orm;
     requires spring.jdbc;
     requires com.zaxxer.hikari;
     requires spring.data.commons;
     requires com.jfoenix;
     requires org.apache.commons.lang3;
+    requires jasperreports;
+    requires org.apache.commons.collections4;
 
     exports com.thuan.carambola;
     opens com.thuan.carambola to spring.core;

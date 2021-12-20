@@ -1,9 +1,11 @@
 package com.thuan.carambola.controller;
 
+import com.thuan.carambola.JavaFXApplication;
 import com.thuan.carambola.component.FXAlerts;
 import com.thuan.carambola.repositoryprimary.PhanManhRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.FlowPane;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -16,7 +18,7 @@ public abstract class ReportController extends MenuController {
     DatePicker ngayBatDau;
     @FXML
     DatePicker ngayKetThuc;
-
+    @FXML FlowPane pnCN;
     private void validation()
     {
         ngayBatDau.valueProperty().addListener((ov, oldValue, newValue) -> {
@@ -25,7 +27,7 @@ public abstract class ReportController extends MenuController {
                         "Mặc định là ngày giờ hiện tại");
                 ngayBatDau.setValue(LocalDate.now());
             }
-            if (newValue.isAfter(ngayKetThuc.getValue())) {
+            if (ngayKetThuc.getValue()!= null && newValue.isAfter(ngayKetThuc.getValue())) {
                 FXAlerts.warning("Ngày bắt đầu không thể sau ngày kết thúc được");
                 ngayBatDau.setValue(ngayKetThuc.getValue());
             }
@@ -36,18 +38,28 @@ public abstract class ReportController extends MenuController {
                         "Mặc định là ngày giờ hiện tại");
                 ngayKetThuc.setValue(LocalDate.now());
             }
-            if (newValue.isAfter(ngayBatDau.getValue())) {
+            if (ngayBatDau.getValue()!= null &&newValue.isBefore(ngayBatDau.getValue())) {
                 FXAlerts.warning("Ngày kết thúc không thể trước ngày bắt đầu được");
-                ngayKetThuc.setValue(ngayBatDau.getValue());
+                ngayBatDau.setValue(LocalDate.now());
+                ngayKetThuc.setValue(LocalDate.now());
             }
         });
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        phanQuyen();
         validation();
+        ngayBatDau.setValue(LocalDate.now().minusDays(7));
+        ngayKetThuc.setValue(LocalDate.now());
     }
-
+    void phanQuyen()
+    {
+        String permissions = JavaFXApplication.nhom;
+        if ("NganHang".equals(permissions)) {
+            pnCN.setDisable(false);
+        }
+    }
     public ReportController(PhanManhRepository phanManhRepository) {
         super(phanManhRepository);
     }

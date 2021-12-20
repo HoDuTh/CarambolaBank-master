@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.ReportKHController">
+<VBox prefHeight="800.0" prefWidth="1514.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thuan.carambola.controller.ReportTKController">
    <children>
       <MenuBar fx:id="menu" VBox.vgrow="NEVER">
          <menus>

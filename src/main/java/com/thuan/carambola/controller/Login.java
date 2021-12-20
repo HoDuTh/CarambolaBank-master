@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -78,7 +79,6 @@ public class Login implements Initializable {
     }
 
     @FXML
-    @Transactional(readOnly = true)
     void buttonLogin(ActionEvent actionEvent) {
         if (cbChiNhanh.getSelectionModel().isEmpty()) {
             FXAlerts.warning("Vui lòng chọn chi nhánh");
@@ -98,18 +98,19 @@ public class Login implements Initializable {
             default -> "0";
         };
         log.info(phanmanh);
+        CarambolaApplication.tenantManager.port = port;
         String url = String.format("jdbc:sqlserver://%s:%s;database=NGANHANG", server, port);
         log.info(String.format("Log to database(%s:%s): {%s}", username, password, url));
         new Thread(()->{
             Platform.runLater(() -> {
                 btnLogin.setDisable(true);
                 try {
-                    CarambolaApplication.tenantManager.removeTenant("tenant");
-                    CarambolaApplication.tenantManager.addTenant("tenant",
+                    CarambolaApplication.tenantManager.removeTenant(server);
+                    CarambolaApplication.tenantManager.addTenant(server,
                             url,
                             username,
                             password);
-                    CarambolaApplication.tenantManager.setCurrentTenant("tenant");
+                    CarambolaApplication.tenantManager.setCurrentTenant(server);
                     log.info("Login successfull. Start get NV info");
                     List<ThongTinDangNhap> listThongTinDangNhap = thongTinDangNhapRepository.get(username);
                     log.info("Get NV info successfull");
@@ -119,6 +120,8 @@ public class Login implements Initializable {
                         JavaFXApplication.maNV = listThongTinDangNhap.get(0).getUSERNAME();
                         JavaFXApplication.phanManh = phanmanh;
                         JavaFXApplication.server = server;
+//                        JavaFXApplication.removeBean();
+
                         StageInitializer.setScene(StageInitializer.guiRut);
                         log.info("Add new NV info to application");
                     } else {
@@ -126,13 +129,13 @@ public class Login implements Initializable {
                         FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));}
                 } catch (SQLException e) {
                     FXAlerts.error(String.format("Lỗi đăng nhập với người dùng '%s'", username));
-                } catch (IOException e) {
+                }catch (IOException e) {
+                    e.printStackTrace();
                     FXAlerts.error("Lỗi chuyển scene");
                 }
                 btnLogin.setDisable(false);
             });
         }).start();
-
     }
 }
 

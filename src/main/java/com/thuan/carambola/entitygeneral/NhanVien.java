@@ -40,6 +40,19 @@ import java.util.UUID;
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
         }),
+        @NamedStoredProcedureQuery(name = "NhanVien.move", procedureName = "SP_CHUYEN_NHANVIEN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV_MOI", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
+        @NamedStoredProcedureQuery(name = "NhanVien.taoLogin", procedureName = "SP_TAOLOGIN", parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "LGNAME", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "PASS", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "USERNAME", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "ROLE", type = String.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "MSG", type = String.class)
+        }),
         @NamedStoredProcedureQuery(name = "NhanVien.delete", procedureName = "SP_XOA_NHANVIEN", parameters = {
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "MANV", type = String.class),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, name = "ISSUCCESS", type = String.class),

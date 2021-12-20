@@ -107,7 +107,7 @@
                         </FlowPane>
                         <FlowPane>
                            <children>
-                              <FlowPane prefHeight="58.0" prefWidth="418.0">
+                              <FlowPane prefHeight="58.0" prefWidth="418.0" visible="false">
                                  <children>
                                     <Label prefHeight="38.0" prefWidth="122.0" text="Ngày bắt đầu">
                                        <padding>
@@ -120,7 +120,7 @@
                                     <Insets top="20.0" />
                                  </padding>
                               </FlowPane>
-                              <FlowPane prefHeight="58.0" prefWidth="418.0">
+                              <FlowPane prefHeight="58.0" prefWidth="418.0" visible="false">
                                  <children>
                                     <Label prefHeight="38.0" prefWidth="122.0" text="Ngày kết thúc">
                                        <padding>
@@ -138,37 +138,6 @@
                         </FlowPane>
                      </children>
                   </FlowPane>
-<!--                        <FlowPane prefHeight="234.0" prefWidth="419.0">-->
-<!--                           <padding>-->
-<!--                              <Insets top="20.0" />-->
-<!--                           </padding>-->
-<!--                           <children>-->
-<!--                              <Separator prefHeight="26.0" prefWidth="419.0" />-->
-<!--                              <FlowPane fx:id="pnSSS" prefHeight="277.0" prefWidth="332.0" />-->
-<!--                              <ToolBar orientation="VERTICAL" prefHeight="147.0" prefWidth="87.0">-->
-<!--                                 <items>-->
-<!--                                    <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" text="Cập nhật" />-->
-<!--                                 </items>-->
-<!--                              </ToolBar>-->
-<!--                           </children>-->
-<!--                        </FlowPane>-->
-<!--                        <FlowPane prefHeight="41.0" prefWidth="418.0">-->
-<!--                           <children>-->
-<!--                              <Label prefHeight="38.0" prefWidth="103.0" text="Tìm kiếm">-->
-<!--                                 <padding>-->
-<!--                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
-<!--                                 </padding>-->
-<!--                              </Label>-->
-<!--                              <TextField fx:id="tfSearch" prefHeight="38.0" prefWidth="312.0">-->
-<!--                                 <padding>-->
-<!--                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
-<!--                                 </padding>-->
-<!--                              </TextField>-->
-<!--                           </children>-->
-<!--                           <padding>-->
-<!--                              <Insets top="20.0" />-->
-<!--                           </padding>-->
-<!--                        </FlowPane>-->
                </children>
             </FlowPane>
          </children>
